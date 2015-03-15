@@ -16,40 +16,48 @@ public class Main {
 	String fileToRead = null;
 	String fileToSave = null;
 	
+	int frameX = 800;
+	int frameY = 600;
+	
 	
 	//============
 	// Program starts here:
 	// Load the image and hook it to the image display controller.
-	fileToRead = JOptionPane.showInputDialog("Choose the image to read.");
+	//fileToRead = JOptionPane.showInputDialog("Choose the image to read.");
+	fileToRead = "CheerSmiles.png"; // Short version for debug purposes.
 	ImageReading ReadImage = new ImageReading(fileToRead);
-	ImageDisplay PrimeImage = new ImageDisplay(ReadImage);
+		
+		
+	ImageDisplay PrimeImage = new ImageDisplay(ReadImage, false);
+		
+		
+	
 	
 	
 	// Alter the image and hook THAT up to the image display controller.
-	/*
-	 * Placeholder code for filtering images goes here.
-	 */
-	ImageDisplay AlterImage = new ImageDisplay(ReadImage);
+	ReadImage.brightnessAdjust(false, 200);
+	ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 	
 	
 	// Save the altered image
-	fileToSave = JOptionPane.showInputDialog("Choose the name for the saved image. \n"
-			+ "									[REMEMBER TO INCLUDE THE FILE EXTENSION!!]");
-	ReadImage.saveImage(fileToSave);
+	//fileToSave = JOptionPane.showInputDialog("Choose the name for the saved image. \n"
+	//		+ "									[REMEMBER TO INCLUDE THE FILE EXTENSION!!]");
+	//ReadImage.saveImage(fileToSave);
 
 	
 	// Frames that make the world spin round.
 	// First frame invoke.
 	JFrame urFrame = new JFrame("Obraz Orginalny");
 	urFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	urFrame.setSize(800,600);
+	urFrame.setSize(frameX,frameY);
 	urFrame.setContentPane(PrimeImage);
 	urFrame.setVisible(true);
 	
 	// Second frame invoke.
 	JFrame isoFrame = new JFrame("Obraz Zmieniony");
 	isoFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	isoFrame.setSize(800,600);
+	isoFrame.setSize(frameX,frameY);
+	isoFrame.setLocation(frameX, 0);
 	isoFrame.setContentPane(AlterImage);
 	isoFrame.setVisible(true);
 	

@@ -1,5 +1,6 @@
 package imageReadFunctions;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -12,13 +13,33 @@ public class ImageReading {
 	protected BufferedImage img = null; // The loaded image.
 	protected BufferedImage altimg = null; // The altered, filtered image space.
 	
+	protected int x = 0; // Width
+	protected int y = 0; // Height
+	// ^ These will be OFTEN overwritten, so pay attention what you do with them!
 	
+	//=============================
+	//=============================
 	
 	//Constructor
 	public ImageReading(String x){
 		accessImage(x);
 	}
 	
+	//=============================
+	//=============================
+	
+	// Set and Get Functions
+	// Get Function for img -> pass image to another class.
+		BufferedImage getImage(){
+			return img;
+		}
+		
+		BufferedImage getAlteredImage(){
+			return altimg;
+		}
+		
+	//=============================
+	//=============================
 
 	// Functions
 	// Read the image using BufferedImage class.
@@ -27,6 +48,52 @@ public class ImageReading {
 			this.img = ImageIO.read(new File(imagename));
 		} catch (IOException e){
 			System.out.println("The 'img' variable is null.");
+		}
+	}
+	
+	
+	// Initialize the altered image 
+	private void initializeAltImage(){
+		this.x = img.getWidth();
+		this.y = img.getHeight();
+		this.altimg = new BufferedImage(x, y, BufferedImage.TYPE_INT_ARGB);
+	}
+	
+	private int safetyCheck(int val){
+		if (val > 255) val = 255;
+		if (val < 0) val = 0;
+		return val;
+	}
+	
+	// Brightness altering function.
+	// Bool 1 -> brighten, Bool 0 -> darken
+	public void brightnessAdjust(Boolean mode, int altvalue){
+
+		initializeAltImage();
+			
+		//Main loop that flies over the entire board.
+		for (int i=0; i<this.x; i++){
+			for (int j=0; j<this.y; j++){
+				
+				//Start by grabbing the colour (type ARGB) from the pixel we're in.
+				Color col = new Color(this.img.getRGB(i, j));
+				
+				int r, g, b;
+				if (mode == true){
+					r = safetyCheck(col.getRed() + altvalue);
+					g = safetyCheck(col.getGreen() + altvalue);
+					b = safetyCheck(col.getBlue() + altvalue);
+				}
+				else{
+					r = safetyCheck(col.getRed() - altvalue);
+					g = safetyCheck(col.getGreen() - altvalue);
+					b = safetyCheck(col.getBlue() - altvalue);
+				}
+				
+				col = new Color(r,g,b); // Overwrite the colour.
+				this.altimg.setRGB(i, j, col.getRGB());
+				
+			}
 		}
 	}
 	
@@ -50,9 +117,5 @@ public class ImageReading {
 		}
 	}
 	
-	// Get Function for img -> pass image to another class.
-	BufferedImage getImage(){
-		return img;
-	}
 }
 	
