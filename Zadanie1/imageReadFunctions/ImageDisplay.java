@@ -24,6 +24,8 @@ public class ImageDisplay extends JPanel{
 		//Checker:
 		System.out.println("Image width: " + this.x + "px");
 		System.out.println("Image height: " + this.y + "px");
+		System.out.println("=======");
+		System.out.println();
 	}
 	
 	// Functions

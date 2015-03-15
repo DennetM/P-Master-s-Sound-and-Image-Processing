@@ -10,6 +10,7 @@ public class ImageReading {
 	
 	// Variables
 	protected BufferedImage img = null; // The loaded image.
+	protected BufferedImage altimg = null; // The altered, filtered image space.
 	
 	
 	
