@@ -6,6 +6,7 @@ import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
@@ -162,35 +163,42 @@ public class ImageReading {
 	
 	//Ur-Median Filtering.
 	//ToDo: think if you can add a separate function for iterating a kernel window.
-	public void medianFilter(){
-		System.out.println("Initializing 2nd image.");
-		initializeAltImage();
-		System.out.println("2nd image initialized.");
-		
-		int kernelwidth = 3;
-		int kernelheight = 3;
-		
-		int[] rMedian = new int [kernelwidth*kernelheight];
-		int[] gMedian = new int [kernelwidth*kernelheight];
-		int[] bMedian = new int [kernelwidth*kernelheight];
-		
-		int kerneliter = 0;
-		
-		// Walk the entire image but stop before you go out of bounds at the kernel boundraries.
-		for (int i = 0; i<this.x-kernelwidth; i++){
-			for (int j=0; j<this.y-kernelheight; j++){
-				// Walk the kernel itself.
-				for (int ki = i; ki<kernelwidth; ki++){
-					for(int kj = j; kj<kernelheight; kj++){
-						Color col = new Color(this.img.getRGB(ki, kj));
-						rMedian[kerneliter] = col.getRed();
-						gMedian[kerneliter] = col.getGreen();
-						bMedian[kerneliter] = col.getBlue();
+		public void medianFilter(){
+			System.out.println("Initializing 2nd image.");
+			initializeAltImage();
+			System.out.println("2nd image initialized.");
+			
+			int kernelwidth = 3;
+			int kernelheight = 3;
+			
+			int[] rMedian = new int [kernelwidth*kernelheight];
+			int[] gMedian = new int [kernelwidth*kernelheight];
+			int[] bMedian = new int [kernelwidth*kernelheight];
+			
+			int kerneliter = 0;
+			
+			// Walk the entire image but stop before you go out of bounds at the kernel boundraries.
+			for (int i = 0; i<this.x-kernelwidth; i++){
+				for (int j=0; j<this.y-kernelheight; j++){
+					// Walk the kernel itself.
+					for (int ki = 0; ki<kernelwidth; ki++){
+						for(int kj = 0; kj<kernelheight; kj++){
+							Color col = new Color(this.img.getRGB(i+ki, j+kj));
+							rMedian[kerneliter] = col.getRed();
+							gMedian[kerneliter] = col.getGreen();
+							bMedian[kerneliter] = col.getBlue();
+							kerneliter++;
+						}
 					}
+					kerneliter = 0;
+					Arrays.sort(rMedian);
+					Arrays.sort(gMedian);
+					Arrays.sort(bMedian);
+					Color colfinal = new Color(rMedian[4], gMedian[4], bMedian[4]);
+					this.altimg.setRGB(i+1, j+1, colfinal.getRGB());
 				}
 			}
 		}
-	}
 	
 	//Save the image we have to a file [NATIVE VERSION].
 	public void saveImage(String saveFile){
