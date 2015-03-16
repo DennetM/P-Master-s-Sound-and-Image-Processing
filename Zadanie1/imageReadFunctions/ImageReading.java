@@ -130,6 +130,32 @@ public class ImageReading {
 		}
 	}
 	
+	// Inverts the color
+	public void invertAdjust(){
+		System.out.println("Initializing 2nd image.");
+		initializeAltImage();
+		System.out.println("2nd image initialized.");
+		
+		//Main loop that flies over the entire board.
+		for (int i=0; i<this.x; i++){
+			for (int j=0; j<this.y; j++){
+				
+				//Start by grabbing the colour (type ARGB) from the pixel we're in.
+				Color col = new Color(this.img.getRGB(i, j));
+				
+				int r, g, b;
+				
+				r = safetyCheck(255 - col.getRed());
+				g = safetyCheck(255 - col.getGreen());
+				b = safetyCheck(255 - col.getBlue());
+				
+				col = new Color(r,g,b); // Overwrite the colour.
+				this.altimg.setRGB(i, j, col.getRGB());
+				
+			}
+		}
+	}
+	
 	//Save the image we have to a file [NATIVE VERSION].
 	public void saveImage(String saveFile){
 		File outputF = new File(saveFile);
