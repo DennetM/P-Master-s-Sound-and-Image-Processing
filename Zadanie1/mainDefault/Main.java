@@ -38,7 +38,8 @@ public class Main {
 	//ReadImage.brightnessAdjust(true, 200);
 	//ReadImage.contrastAdjust(100);
 	//ReadImage.invertAdjust();
-	ReadImage.medianFilter();
+	ReadImage.meanFilter();
+	//ReadImage.medianFilter();
 	ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 	
 	
