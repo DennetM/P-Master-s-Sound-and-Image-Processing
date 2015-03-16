@@ -32,11 +32,11 @@ public class ImageReading {
 	
 	// Set and Get Functions
 	// Get Function for img -> pass image to another class.
-		BufferedImage getImage(){
+		public BufferedImage getImage(){
 			return img;
 		}
 		
-		BufferedImage getAlteredImage(){
+		public BufferedImage getAlteredImage(){
 			return altimg;
 		}
 		
@@ -152,6 +152,42 @@ public class ImageReading {
 				col = new Color(r,g,b); // Overwrite the colour.
 				this.altimg.setRGB(i, j, col.getRGB());
 				
+			}
+		}
+	}
+	
+	
+	//Ur-Mean Filtering.
+	//ToDo: EVERYTHING.
+	
+	//Ur-Median Filtering.
+	//ToDo: think if you can add a separate function for iterating a kernel window.
+	public void medianFilter(){
+		System.out.println("Initializing 2nd image.");
+		initializeAltImage();
+		System.out.println("2nd image initialized.");
+		
+		int kernelwidth = 3;
+		int kernelheight = 3;
+		
+		int[] rMedian = new int [kernelwidth*kernelheight];
+		int[] gMedian = new int [kernelwidth*kernelheight];
+		int[] bMedian = new int [kernelwidth*kernelheight];
+		
+		int kerneliter = 0;
+		
+		// Walk the entire image but stop before you go out of bounds at the kernel boundraries.
+		for (int i = 0; i<this.x-kernelwidth; i++){
+			for (int j=0; j<this.y-kernelheight; j++){
+				// Walk the kernel itself.
+				for (int ki = i; ki<kernelwidth; ki++){
+					for(int kj = j; kj<kernelheight; kj++){
+						Color col = new Color(this.img.getRGB(ki, kj));
+						rMedian[kerneliter] = col.getRed();
+						gMedian[kerneliter] = col.getGreen();
+						bMedian[kerneliter] = col.getBlue();
+					}
+				}
 			}
 		}
 	}
