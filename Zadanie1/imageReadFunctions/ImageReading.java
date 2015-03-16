@@ -2,6 +2,8 @@ package imageReadFunctions;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 
@@ -56,7 +58,7 @@ public class ImageReading {
 	private void initializeAltImage(){
 		this.x = img.getWidth();
 		this.y = img.getHeight();
-		this.altimg = new BufferedImage(x, y, BufferedImage.TYPE_INT_ARGB);
+		this.altimg = new BufferedImage(x, y, img.getType());
 	}
 	
 	private int safetyCheck(int val){
@@ -68,9 +70,9 @@ public class ImageReading {
 	// Brightness altering function.
 	// Bool 1 -> brighten, Bool 0 -> darken
 	public void brightnessAdjust(Boolean mode, int altvalue){
-
+		System.out.println("Initializing 2nd image.");
 		initializeAltImage();
-			
+		System.out.println("2nd image initialized.");
 		//Main loop that flies over the entire board.
 		for (int i=0; i<this.x; i++){
 			for (int j=0; j<this.y; j++){
@@ -89,6 +91,37 @@ public class ImageReading {
 					g = safetyCheck(col.getGreen() - altvalue);
 					b = safetyCheck(col.getBlue() - altvalue);
 				}
+				
+				col = new Color(r,g,b); // Overwrite the colour.
+				this.altimg.setRGB(i, j, col.getRGB());
+				
+			}
+		}
+	}
+	
+	// Contrast altering function.
+	// Again, mode 1 -> increase contrast, 0 -> decrease contrast.
+	public void contrastAdjust(int contrast){
+		System.out.println("Initializing 2nd image.");
+		initializeAltImage();
+		System.out.println("2nd image initialized.");
+		
+		int factor = 0;
+		
+		factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+		
+		//Main loop that flies over the entire board.
+		for (int i=0; i<this.x; i++){
+			for (int j=0; j<this.y; j++){
+				
+				//Start by grabbing the colour (type ARGB) from the pixel we're in.
+				Color col = new Color(this.img.getRGB(i, j));
+				
+				int r, g, b;
+				
+				r = safetyCheck(factor * (col.getRed() - 128) + 128);
+				g = safetyCheck(factor * (col.getGreen() - 128) + 128);
+				b = safetyCheck(factor * (col.getBlue() - 128) + 128);
 				
 				col = new Color(r,g,b); // Overwrite the colour.
 				this.altimg.setRGB(i, j, col.getRGB());

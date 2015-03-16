@@ -41,7 +41,8 @@ public class ImageDisplay extends JPanel{
 	public void paintComponent(Graphics g){
 		//Scale drawImage overwrite.
 		//What image / Anchor at X and Y / Finish Anchor at X, Y / Start Copying from X and Y / Finish Copying from X and Y.
-		g.drawImage(this.img, -20, 0, 770, 550, 0, 0, x, y, null);	
+		g.drawImage(this.img, -20, 0, 770, 550, 0, 0, x, y, null);
+		g.dispose();
 	}
 	
 }

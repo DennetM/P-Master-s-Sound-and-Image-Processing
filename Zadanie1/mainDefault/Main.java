@@ -35,7 +35,8 @@ public class Main {
 	
 	
 	// Alter the image and hook THAT up to the image display controller.
-	ReadImage.brightnessAdjust(false, 200);
+	//ReadImage.brightnessAdjust(true, 200);
+	ReadImage.contrastAdjust(100);
 	ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 	
 	
