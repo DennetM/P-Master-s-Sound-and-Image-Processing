@@ -3,7 +3,7 @@
 ### To-Do List:
 ### * ~~Wyświetlanie dwóch zdjęć.~~
 ### * ~~Podstawowe operacje (janośc, kontrast, inverse).~~
-### * Podstawowe Filtry (Średnia Artym, Mediana)
+### * ~~Podstawowe Filtry (Średnia Artym, Mediana)~~
 ### * Histogram
 ### * Modyfikacja obrazu H3
 ### * Filtracja splotowa S4
