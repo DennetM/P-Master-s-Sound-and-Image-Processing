@@ -68,6 +68,63 @@ public class ImageReading {
 		return val;
 	}
 	
+	//Normalize the picture.
+	// Simply put, this algorithm detects the pixel colour range in the picture and then stretches it to fit 0-255.
+	// Works on all channels.
+	private void stretchContrast(){
+		//Color variable to work with, initialized at top-left pixel.
+		Color col = new Color(this.altimg.getRGB(0,0));
+		// Streched range for all channels:
+		int rNewMin = 0;
+		int rNewMax = 255;
+		int gNewMin = 0;
+		int gNewMax = 255;
+		int bNewMin = 0;
+		int bNewMax = 255;
+		
+		// Placeholders for the old range, all channels again:
+		// Initialized value: top-most pixel, a placeholder so we start SOMEWHERE.
+		int rOldMin = col.getRed();
+		int rOldMax = col.getRed();
+		int gOldMin = col.getGreen();
+		int gOldMax = col.getGreen();
+		int bOldMin = col.getBlue();
+		int bOldMax = col.getBlue();
+		
+		// Scan the picture once to find the proper values.
+		for (int i = 0; i<this.x; i++){
+			for (int j = 0; j<this.y; j++){
+				// Overwrite our color and let's start having some fun.
+				col = new Color(this.altimg.getRGB(i, j));
+				
+				if(col.getRed() < rOldMin) rOldMin = col.getRed(); // If smaller, reapply.
+				if(col.getRed() > rOldMax) rOldMax = col.getRed(); // If bigger, reapply.
+				if(col.getGreen() < gOldMin) gOldMin = col.getGreen();
+				if(col.getGreen() > gOldMax) gOldMax = col.getGreen();
+				if(col.getBlue() < bOldMin) bOldMin = col.getBlue();
+				if(col.getBlue() > bOldMax) bOldMax= col.getBlue();
+			}
+		}
+		
+		// And now we run the entire thing AGAIN to do the proper math.
+		// The function is simple: http://homepages.inf.ed.ac.uk/rbf/HIPR2/eqns/eqnstr1.gif	
+		for (int i = 0; i<this.x; i++){
+			for (int j = 0; j<this.y; j++){
+				col = new Color(this.altimg.getRGB(i, j));
+				
+				int r, g, b;
+				//Warning: here there be math-dragons.
+				r = (col.getRed() - rOldMin) * ((rNewMax - rNewMin) / (rOldMax - rOldMin)) + rNewMin;
+				g = (col.getGreen() - gOldMin) * ((gNewMax - gNewMin) / (gOldMax - gOldMin)) + gNewMin;
+				b = (col.getBlue() - bOldMin) * ((bNewMax - bNewMin) / (bOldMax - bOldMin)) + bNewMin;
+				
+				col = new Color(r,g,b);
+				this.altimg.setRGB(i, j, col.getRGB());
+			}
+		}
+		
+	}
+	
 	// Brightness altering function.
 	// Bool 1 -> brighten, Bool 0 -> darken
 	public void brightnessAdjust(Boolean mode, int altvalue){
@@ -173,6 +230,7 @@ public class ImageReading {
 		
 		int kerneliter = 0;
 		
+		System.out.println("\n\nThis may take a while...\n");
 		// Walk the entire image but stop before you go out of bounds at the kernel boundraries.
 		for (int i = 0; i<this.x-kernelwidth; i++){
 			for (int j=0; j<this.y-kernelheight; j++){
@@ -197,6 +255,7 @@ public class ImageReading {
 				this.altimg.setRGB(i+1, j+1, colfinal.getRGB());
 			}
 		}
+		stretchContrast();
 	}
 	
 	//Ur-Median Filtering.
@@ -214,6 +273,7 @@ public class ImageReading {
 			
 			int kerneliter = 0;
 			
+			System.out.println("\n\nThis may take a while...\n");
 			// Walk the entire image but stop before you go out of bounds at the kernel boundraries.
 			for (int i = 0; i<this.x-kernelwidth; i++){
 				for (int j=0; j<this.y-kernelheight; j++){
