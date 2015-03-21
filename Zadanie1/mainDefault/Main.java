@@ -24,8 +24,8 @@ public class Main {
 	// Program starts here:
 	// Load the image and hook it to the image display controller.
 	//fileToRead = JOptionPane.showInputDialog("Choose the image to read.");
-	fileToRead = "CheerSmiles.png"; // Short version for debug purposes.
-	//fileToRead = "Lena.png";
+	//fileToRead = "CheerSmiles.png"; // Short version for debug purposes.
+	fileToRead = "Lena.png";
 	ImageReading ReadImage = new ImageReading(fileToRead);
 		
 		
@@ -39,8 +39,9 @@ public class Main {
 	//ReadImage.brightnessAdjust(true, 200);
 	//ReadImage.contrastAdjust(100);
 	//ReadImage.invertAdjust();
-	ReadImage.meanFilter();
+	//ReadImage.meanFilter();
 	//ReadImage.medianFilter();
+	ReadImage.foregroundFilter(4);
 	ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 	
 	
