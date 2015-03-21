@@ -41,7 +41,8 @@ public class Main {
 	//ReadImage.invertAdjust();
 	//ReadImage.meanFilter();
 	//ReadImage.medianFilter();
-	ReadImage.foregroundFilter(4);
+	//ReadImage.foregroundFilter(4);
+	ReadImage.Rosenfeld(2);
 	ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 	
 	

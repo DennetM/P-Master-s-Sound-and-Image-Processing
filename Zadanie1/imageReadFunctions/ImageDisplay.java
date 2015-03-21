@@ -26,7 +26,7 @@ public class ImageDisplay extends JPanel{
 		this.y = this.img.getHeight();
 		
 		//Checker:
-		System.out.println("Image loaded with:");
+		System.out.println("\nImage loaded with:");
 		System.out.println("Image width: " + this.x + "px");
 		System.out.println("Image height: " + this.y + "px");
 		System.out.println("=======");

@@ -431,6 +431,57 @@ public class ImageReading {
 		// THIS is where we do the proper thingmabob.
 		stretchContrastTableEdition(rChannel, gChannel, bChannel);
 	}
+	
+	//Rosenfeld non-linear Filter.
+	// This is nothing but math.
+	public void Rosenfeld(int R){
+		System.out.println("Initializing 2nd image.");
+		initializeAltImage();
+		System.out.println("2nd image initialized.");
+		
+		int r,g,b;
+		int r1 = 0, g1 = 0, b1 = 0;
+		int r2 = 0, g2 = 0, b2 = 0;
+		Color col = null;
+		
+		
+		//Main loop that flies over the entire board.
+		for (int i=R; i<this.x-R; i++){
+			for (int j=0; j<this.y; j++){				
+				// The function rolls itself over each channel.
+				// g(x,y) = 1/R * ( sum(i=0, R, f(x+i-1, y) - sum(i=0, R, f(x-i,y))
+				
+				//Sum calculation.
+				for (int kern = 1; kern<=R; kern++){
+					//System.out.println("First color cords: ("+(i+kern-1)+","+j);
+					col = new Color(this.img.getRGB(i+kern-1, j));
+					r1 += col.getRed();
+					g1 += col.getGreen();
+					b1 += col.getBlue();
+					
+					//System.out.println("First color cords: ("+(i-kern)+","+j);
+					col = new Color(this.img.getRGB(i-kern, j));
+					r2 += col.getRed();
+					g2 += col.getGreen();
+					b2 += col.getBlue();
+				}
+				
+				// Final calculation
+				// IMPORANT: IF YOU EVERY WANT TO MULTIPLY SOMETHING BY 1/X, JUST DIVIDE THE DAMN THING BY X. OTHERWISE JAVA
+				// WILL THROW A FUCKING HISSY FIT GOD DAMMIT YOU COCKY WHINING SCAMP.
+				r = safetyCheck((r1 - r2)/R);
+				g = safetyCheck((g1 - g2)/R);
+				b = safetyCheck((b1 - b2)/R);
+				
+				
+				r1 = 0; g1 = 0; b1 = 0;
+				r2 = 0; g2 = 0; b2 = 0;
+				
+				col = new Color(r,g,b);
+				this.altimg.setRGB(i, j, col.getRGB());
+			}
+		}
+	}
 
 	
 	//Save the image we have to a file [NATIVE VERSION].
