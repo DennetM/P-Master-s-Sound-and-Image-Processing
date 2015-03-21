@@ -68,6 +68,63 @@ public class ImageReading {
 		return val;
 	}
 	
+	//Normalize the picture.
+	// Simply put, this algorithm detects the pixel colour range in the picture and then stretches it to fit 0-255.
+	// Works on all channels.
+	private void stretchContrast(){
+		//Color variable to work with, initialized at top-left pixel.
+		Color col = new Color(this.altimg.getRGB(0,0));
+		// Streched range for all channels:
+		int rNewMin = 0;
+		int rNewMax = 255;
+		int gNewMin = 0;
+		int gNewMax = 255;
+		int bNewMin = 0;
+		int bNewMax = 255;
+		
+		// Placeholders for the old range, all channels again:
+		// Initialized value: top-most pixel, a placeholder so we start SOMEWHERE.
+		int rOldMin = col.getRed();
+		int rOldMax = col.getRed();
+		int gOldMin = col.getGreen();
+		int gOldMax = col.getGreen();
+		int bOldMin = col.getBlue();
+		int bOldMax = col.getBlue();
+		
+		// Scan the picture once to find the proper values.
+		for (int i = 0; i<this.x; i++){
+			for (int j = 0; j<this.y; j++){
+				// Overwrite our color and let's start having some fun.
+				col = new Color(this.altimg.getRGB(i, j));
+				
+				if(col.getRed() < rOldMin) rOldMin = col.getRed(); // If smaller, reapply.
+				if(col.getRed() > rOldMax) rOldMax = col.getRed(); // If bigger, reapply.
+				if(col.getGreen() < gOldMin) gOldMin = col.getGreen();
+				if(col.getGreen() > gOldMax) gOldMax = col.getGreen();
+				if(col.getBlue() < bOldMin) bOldMin = col.getBlue();
+				if(col.getBlue() > bOldMax) bOldMax= col.getBlue();
+			}
+		}
+		
+		// And now we run the entire thing AGAIN to do the proper math.
+		// The function is simple: http://homepages.inf.ed.ac.uk/rbf/HIPR2/eqns/eqnstr1.gif	
+		for (int i = 0; i<this.x; i++){
+			for (int j = 0; j<this.y; j++){
+				col = new Color(this.altimg.getRGB(i, j));
+				
+				int r, g, b;
+				//Warning: here there be math-dragons.
+				r = (col.getRed() - rOldMin) * ((rNewMax - rNewMin) / (rOldMax - rOldMin)) + rNewMin;
+				g = (col.getGreen() - gOldMin) * ((gNewMax - gNewMin) / (gOldMax - gOldMin)) + gNewMin;
+				b = (col.getBlue() - bOldMin) * ((bNewMax - bNewMin) / (bOldMax - bOldMin)) + bNewMin;
+				
+				col = new Color(r,g,b);
+				this.altimg.setRGB(i, j, col.getRGB());
+			}
+		}
+		
+	}
+	
 	// Brightness altering function.
 	// Bool 1 -> brighten, Bool 0 -> darken
 	public void brightnessAdjust(Boolean mode, int altvalue){
@@ -173,6 +230,7 @@ public class ImageReading {
 		
 		int kerneliter = 0;
 		
+		System.out.println("\n\nThis may take a while...\n");
 		// Walk the entire image but stop before you go out of bounds at the kernel boundraries.
 		for (int i = 0; i<this.x-kernelwidth; i++){
 			for (int j=0; j<this.y-kernelheight; j++){
@@ -197,6 +255,7 @@ public class ImageReading {
 				this.altimg.setRGB(i+1, j+1, colfinal.getRGB());
 			}
 		}
+		stretchContrast();
 	}
 	
 	//Ur-Median Filtering.
@@ -214,6 +273,7 @@ public class ImageReading {
 			
 			int kerneliter = 0;
 			
+			System.out.println("\n\nThis may take a while...\n");
 			// Walk the entire image but stop before you go out of bounds at the kernel boundraries.
 			for (int i = 0; i<this.x-kernelwidth; i++){
 				for (int j=0; j<this.y-kernelheight; j++){
@@ -235,7 +295,194 @@ public class ImageReading {
 					this.altimg.setRGB(i+1, j+1, colfinal.getRGB());
 				}
 			}
+			stretchContrast();
 		}
+		
+
+		//Normalize the picture, THREE TABLES EDITION!
+		// Because sometimes life likes throwing logs under your feet.
+		// Works the same as the above algorithm, instead operates on three int tables and not Colors.
+		private void stretchContrastTableEdition(int[][] r, int[][] g, int[][] b){
+			// Streched range for all channels:
+			int rNewMin = 0;
+			int rNewMax = 255;
+			int gNewMin = 0;
+			int gNewMax = 255;
+			int bNewMin = 0;
+			int bNewMax = 255;
+			
+			// Placeholders for the old range, all channels again:
+			// Initialized value: top-most pixel, a placeholder so we start SOMEWHERE.
+			int rOldMin = r[0][0];
+			int rOldMax = r[0][0];
+			int gOldMin = g[0][0];
+			int gOldMax = g[0][0];
+			int bOldMin = b[0][0];
+			int bOldMax = b[0][0];
+			
+			// Scan the picture once to find the proper values.
+			for (int i = 0; i<this.x; i++){
+				for (int j = 0; j<this.y; j++){
+					
+					if(r[i][j] < rOldMin) rOldMin = r[i][j]; // If smaller, reapply.
+					if(r[i][j] > rOldMax) rOldMax = r[i][j]; // If bigger, reapply.
+					if(g[i][j] < gOldMin) gOldMin = g[i][j];
+					if(g[i][j] > gOldMax) gOldMax = g[i][j];
+					if(b[i][j] < bOldMin) bOldMin = b[i][j];
+					if(b[i][j] > bOldMax) bOldMax = b[i][j];
+				}
+			}
+			
+			// And now we run the entire thing AGAIN to do the proper math.
+			// The function is simple: http://homepages.inf.ed.ac.uk/rbf/HIPR2/eqns/eqnstr1.gif	
+			for (int i = 0; i<this.x; i++){
+				for (int j = 0; j<this.y; j++){
+					
+					int rnew, gnew, bnew;
+					//Warning: here there be math-dragons.
+					rnew = (r[i][j] - rOldMin) * ((rNewMax - rNewMin) / (rOldMax - rOldMin)) + rNewMin;
+					gnew = (g[i][j] - gOldMin) * ((gNewMax - gNewMin) / (gOldMax - gOldMin)) + gNewMin;
+					bnew = (b[i][j] - bOldMin) * ((bNewMax - bNewMin) / (bOldMax - bOldMin)) + bNewMin;
+					
+					Color col = new Color(rnew, gnew, bnew);
+					this.altimg.setRGB(i, j, col.getRGB());
+					
+				}
+			}
+			
+		}
+		
+	//Foreground Filtering, in four variants.
+	// The main determinant is the INT value, from 1 to 4 (as inputted by the user). Variants are named in the code.
+	public void foregroundFilter(int variant){
+		System.out.println("Initializing 2nd image.");
+		initializeAltImage();
+		System.out.println("2nd image initialized.");
+		
+		int kernelwidth = 3;
+		int kernelheight = 3;
+		
+		int[] rMedian = new int [kernelwidth*kernelheight];
+		int[] gMedian = new int [kernelwidth*kernelheight];
+		int[] bMedian = new int [kernelwidth*kernelheight];
+		
+		int kerneliter = 0;
+		
+		//Our filters as tables, initialized top-down, left-to-right in that order.
+		int[] south = {-1, 1, 1, -1, -2, 1, -1, 1, 1};
+		int[] southwest = {1, 1, 1, -1, -2, 1, -1, -1, 1};
+		int[] west = {1, 1, 1, 1, -2, 1, -1, -1, -1};
+		int[] northwest = {1, 1, 1, 1, -2, -1, 1, -1, -1};
+		
+		//And since this is a bullshit filter, we're going to need some backup.
+		int[][] rChannel = new int [this.x][this.y];
+		int[][] gChannel = new int [this.x][this.y];
+		int[][] bChannel = new int [this.x][this.y];
+		//...yes, why I did just make 3 pictures out of one. SUE ME.
+		
+		
+		System.out.println("\n\nThis may take a while...\n");
+		// Walk the entire image but stop before you go out of bounds at the kernel boundraries.
+		for (int i = 0; i<this.x-kernelwidth; i++){
+			for (int j=0; j<this.y-kernelheight; j++){
+				// Walk the kernel itself.
+				for (int ki = 0; ki<kernelwidth; ki++){
+					for(int kj = 0; kj<kernelheight; kj++){
+						Color col = new Color(this.img.getRGB(i+ki, j+kj));
+						rMedian[kerneliter] = col.getRed();
+						gMedian[kerneliter] = col.getGreen();
+						bMedian[kerneliter] = col.getBlue();
+						kerneliter++;
+					}
+				}
+				kerneliter = 0;
+				int r = 0;
+				int g = 0;
+				int b = 0;
+				//Math time.
+				// REMINDER: WE FOLLOW THE (Y) VALUE, DESCENDING.
+				for (int itr = 0; itr<rMedian.length; itr++){
+					if (variant == 1){
+						r += rMedian[itr]*south[itr];
+						g += gMedian[itr]*south[itr];
+						b += bMedian[itr]*south[itr];
+					}
+					else if (variant == 2){
+						r += rMedian[itr]*southwest[itr];
+						g += gMedian[itr]*southwest[itr];
+						b += bMedian[itr]*southwest[itr];
+					}
+					else if (variant == 3){
+						r += rMedian[itr]*west[itr];
+						g += gMedian[itr]*west[itr];
+						b += bMedian[itr]*west[itr];
+					}
+					else if (variant == 4){
+						r += rMedian[itr]*northwest[itr];
+						g += gMedian[itr]*northwest[itr];
+						b += bMedian[itr]*northwest[itr];
+					}
+				}
+				rChannel[i][j] = safetyCheck(r);
+				gChannel[i][j] = safetyCheck(g);
+				bChannel[i][j] = safetyCheck(b);
+			}
+		}
+		// THIS is where we do the proper thingmabob.
+		stretchContrastTableEdition(rChannel, gChannel, bChannel);
+	}
+	
+	//Rosenfeld non-linear Filter.
+	// This is nothing but math.
+	public void Rosenfeld(int R){
+		System.out.println("Initializing 2nd image.");
+		initializeAltImage();
+		System.out.println("2nd image initialized.");
+		
+		int r,g,b;
+		int r1 = 0, g1 = 0, b1 = 0;
+		int r2 = 0, g2 = 0, b2 = 0;
+		Color col = null;
+		
+		
+		//Main loop that flies over the entire board.
+		for (int i=R; i<this.x-R; i++){
+			for (int j=0; j<this.y; j++){				
+				// The function rolls itself over each channel.
+				// g(x,y) = 1/R * ( sum(i=0, R, f(x+i-1, y) - sum(i=0, R, f(x-i,y))
+				
+				//Sum calculation.
+				for (int kern = 1; kern<=R; kern++){
+					//System.out.println("First color cords: ("+(i+kern-1)+","+j);
+					col = new Color(this.img.getRGB(i+kern-1, j));
+					r1 += col.getRed();
+					g1 += col.getGreen();
+					b1 += col.getBlue();
+					
+					//System.out.println("First color cords: ("+(i-kern)+","+j);
+					col = new Color(this.img.getRGB(i-kern, j));
+					r2 += col.getRed();
+					g2 += col.getGreen();
+					b2 += col.getBlue();
+				}
+				
+				// Final calculation
+				// IMPORANT: IF YOU EVERY WANT TO MULTIPLY SOMETHING BY 1/X, JUST DIVIDE THE DAMN THING BY X. OTHERWISE JAVA
+				// WILL THROW A FUCKING HISSY FIT GOD DAMMIT YOU COCKY WHINING SCAMP.
+				r = safetyCheck((r1 - r2)/R);
+				g = safetyCheck((g1 - g2)/R);
+				b = safetyCheck((b1 - b2)/R);
+				
+				
+				r1 = 0; g1 = 0; b1 = 0;
+				r2 = 0; g2 = 0; b2 = 0;
+				
+				col = new Color(r,g,b);
+				this.altimg.setRGB(i, j, col.getRGB());
+			}
+		}
+	}
+
 	
 	//Save the image we have to a file [NATIVE VERSION].
 	public void saveImage(String saveFile){
