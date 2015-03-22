@@ -3,7 +3,6 @@ package mainDefault;
 import imageReadFunctions.ImageDisplay;
 import imageReadFunctions.ImageReading;
 import prettyDrawings.HistogramAction;
-import actions.*;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -27,7 +26,7 @@ public class Main {
 		// Load the image and hook it to the image display controller.
 		//fileToRead = JOptionPane.showInputDialog("Choose the image to read.");
 		//fileToRead = "CheerSmiles.png"; // Short version for debug purposes.
-		fileToRead = "D:\\GitHub\\PL_Masters_-_Sound_and_Image_Processing_-_historySucks\\src\\CheerSmiles.png";
+		fileToRead = "D:\\GitHub\\PL_Masters_-_Sound_and_Image_Processing_-_historySucks\\src\\Lena.png";
 		ImageReading ReadImage = new ImageReading(fileToRead);
 			
 			
@@ -46,7 +45,7 @@ public class Main {
 		//ReadImage.foregroundFilter(4);
 		ReadImage.Rosenfeld(2);
 		ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
-		HistogramAction.execute(ReadImage);
+		HistogramAction histAction = new HistogramAction();
 		
 		// Save the altered image
 		//fileToSave = JOptionPane.showInputDialog("Choose the name for the saved image. \n"
@@ -70,5 +69,6 @@ public class Main {
 		isoFrame.setContentPane(AlterImage);
 		isoFrame.setVisible(true);
 	
+		histAction.showTheThing(ReadImage);
 	}
 }

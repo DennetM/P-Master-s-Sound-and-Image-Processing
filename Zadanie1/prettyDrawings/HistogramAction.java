@@ -23,13 +23,15 @@ public class HistogramAction{
     private int[] histogramRed = new int[256];
     private int[] histogramGreen = new int[256];
     private int[] histogramBlue = new int[256];
+    private int[] histogramAlpha = new int[256];
     
     DefaultCategoryDataset datasetRed = new DefaultCategoryDataset();
     DefaultCategoryDataset datasetGreen = new DefaultCategoryDataset();
     DefaultCategoryDataset datasetBlue = new DefaultCategoryDataset();
+    DefaultCategoryDataset datasetAlpha = new DefaultCategoryDataset();
 
-    public BufferedImage execute(ImageReading img) {
-    	BufferedImage image = img.getAlteredImage();
+    public BufferedImage showTheThing(ImageReading img) {
+    	BufferedImage image = img.getImage();
     	
 
         for (int x = 0; x < image.getWidth(); x++) {
@@ -38,6 +40,9 @@ public class HistogramAction{
                 histogramRed[tempColor.getRed()]++;
                 histogramGreen[tempColor.getGreen()]++;
                 histogramBlue[tempColor.getBlue()]++;
+                histogramAlpha[tempColor.getAlpha()]++;
+                //if(y == 0)System.out.println(x + "  UJ UJ ");
+                if(tempColor.getRed() == 0)System.out.println(x + "  UJ UJ ");
             }
         }
         
@@ -80,13 +85,26 @@ public class HistogramAction{
                 false                     // URLs?
             );
         
+        JFreeChart chartAlpha = ChartFactory.createBarChart(
+                "Alpha",         // chart title
+                "",               // domain axis label
+                "",                  // range axis label
+                datasetAlpha,                  // data
+                PlotOrientation.VERTICAL, // orientation
+                false,                     // include legend
+                false,                     // tooltips?
+                false                     // URLs?
+            );
+        
         chartRed.setBackgroundPaint(Color.white);
         chartGreen.setBackgroundPaint(Color.white);
         chartBlue.setBackgroundPaint(Color.white);
+        chartAlpha.setBackgroundPaint(Color.white);
         
         chartRed.setBorderVisible(false);
         chartGreen.setBorderVisible(false);
         chartBlue.setBorderVisible(false);
+        chartAlpha.setBorderVisible(false);
         
         CategoryPlot plotRed = chartRed.getCategoryPlot();
         plotRed.setBackgroundPaint(Color.white);
@@ -118,18 +136,31 @@ public class HistogramAction{
         ValueAxis valueAxisBlue = (ValueAxis) plotBlue.getRangeAxis();
         valueAxisBlue.setVisible(false);
         
+        CategoryPlot plotAlpha = chartAlpha.getCategoryPlot();
+        plotAlpha.setBackgroundPaint(Color.white);
+        BarRenderer barRendererAlpha = (BarRenderer) plotAlpha.getRenderer();
+        barRendererAlpha.setPaint(Color.black);
+        barRendererAlpha.setItemMargin(0.0);
+        CategoryAxis categoryAxisAlpha = (CategoryAxis) plotAlpha.getDomainAxis();
+        categoryAxisAlpha.setVisible(false);
+        ValueAxis valueAxisAlpha = (ValueAxis) plotAlpha.getRangeAxis();
+        valueAxisAlpha.setVisible(false);
+        
         
         BufferedImage imageRed = chartRed.createBufferedImage(300, 300);
         BufferedImage imageGreen = chartGreen.createBufferedImage(300, 300);
         BufferedImage imageBlue = chartBlue.createBufferedImage(300, 300);
+        BufferedImage imageAlpha = chartAlpha.createBufferedImage(300, 300);
         
         File outputfileRed = new File("imageRed.png");
         File outputfileGreen = new File("imageGreen.png");
         File outputfileBlue = new File("imageBlue.png");
+        File outputfileAlpha = new File("imageAlpha.png");
         try {
             ImageIO.write(imageRed, "png", outputfileRed);
             ImageIO.write(imageGreen, "png", outputfileGreen);
             ImageIO.write(imageBlue, "png", outputfileBlue);
+            ImageIO.write(imageAlpha, "png", outputfileAlpha);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -143,6 +174,7 @@ public class HistogramAction{
             datasetRed.addValue(histogramRed[i], i+"", "");
             datasetGreen.addValue(histogramGreen[i], i+"", "");
             datasetBlue.addValue(histogramBlue[i], i+"", "");
+            datasetAlpha.addValue(histogramAlpha[i], i+"", "");
         }
         
     }
