@@ -16,6 +16,7 @@ import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 public class HistogramAction{
@@ -25,31 +26,39 @@ public class HistogramAction{
     private int[] histogramBlue = new int[256];
     private int[] histogramAlpha = new int[256];
     
+    
     DefaultCategoryDataset datasetRed = new DefaultCategoryDataset();
     DefaultCategoryDataset datasetGreen = new DefaultCategoryDataset();
     DefaultCategoryDataset datasetBlue = new DefaultCategoryDataset();
     DefaultCategoryDataset datasetAlpha = new DefaultCategoryDataset();
+    
+    private void initiateTables(){
+    	for (int i = 0; i<256; i++){
+    		this.histogramRed[i] = 0;
+    		this.histogramGreen[i] = 0;
+    		this.histogramBlue[i] = 0;
+    		this.histogramAlpha[i] = 0;
+    	}
+    }
 
-    public BufferedImage showTheThing(ImageReading img) {
+    public void showTheThing(ImageReading img) {
     	BufferedImage image = img.getImage();
+    	initiateTables();
     	
-
-        for (int x = 0; x < image.getWidth(); x++) {
-            for (int y = 0; y < image.getHeight(); y++) {
-                Color tempColor = new Color(image.getRGB(x, y));
-                histogramRed[tempColor.getRed()]++;
-                histogramGreen[tempColor.getGreen()]++;
-                histogramBlue[tempColor.getBlue()]++;
-                histogramAlpha[tempColor.getAlpha()]++;
-                //if(y == 0)System.out.println(x + "  UJ UJ ");
-                if(tempColor.getRed() == 0)System.out.println(x + "  UJ UJ ");
-            }
-        }
+    	
+    	for (int i=0; i<image.getWidth(); i++){
+    		for (int j=0; j<image.getHeight(); j++){
+    			Color tempcol = new Color(image.getRGB(i, j));
+    			
+    			histogramRed[tempcol.getRed()] += 1;
+    			histogramGreen[tempcol.getGreen()] += 1;
+    			histogramBlue[tempcol.getBlue()] += 1;
+    			histogramAlpha[tempcol.getAlpha()] += 1;
+    		}
+    	}
         
         prepareDataset();
         createChart();
-
-        return null;
     }
 
     @SuppressWarnings("deprecation")
@@ -110,7 +119,10 @@ public class HistogramAction{
         plotRed.setBackgroundPaint(Color.white);
         BarRenderer barRendererRed = (BarRenderer) plotRed.getRenderer();
         barRendererRed.setPaint(Color.red);
-        barRendererRed.setItemMargin(0.0);
+        barRendererRed.setDrawBarOutline(false);
+        barRendererRed.setShadowVisible(false);
+        barRendererRed.setGradientPaintTransformer(null);
+        barRendererRed.setBarPainter(new StandardBarPainter());
         CategoryAxis categoryAxisRed = (CategoryAxis) plotRed.getDomainAxis();
         categoryAxisRed.setVisible(false);
         ValueAxis valueAxisRed = (ValueAxis) plotRed.getRangeAxis();
@@ -120,7 +132,10 @@ public class HistogramAction{
         plotGreen.setBackgroundPaint(Color.white);
         BarRenderer barRendererGreen = (BarRenderer) plotGreen.getRenderer();
         barRendererGreen.setPaint(Color.green);
-        barRendererGreen.setItemMargin(0.0);
+        barRendererGreen.setDrawBarOutline(false);
+        barRendererGreen.setShadowVisible(false);
+        barRendererGreen.setGradientPaintTransformer(null);
+        barRendererGreen.setBarPainter(new StandardBarPainter());
         CategoryAxis categoryAxisGreen = (CategoryAxis) plotGreen.getDomainAxis();
         categoryAxisGreen.setVisible(false);
         ValueAxis valueAxisGreen = (ValueAxis) plotGreen.getRangeAxis();
@@ -130,7 +145,10 @@ public class HistogramAction{
         plotBlue.setBackgroundPaint(Color.white);
         BarRenderer barRendererBlue = (BarRenderer) plotBlue.getRenderer();
         barRendererBlue.setPaint(Color.blue);
-        barRendererBlue.setItemMargin(0.0);
+        barRendererBlue.setDrawBarOutline(false);
+        barRendererBlue.setShadowVisible(false);
+        barRendererBlue.setGradientPaintTransformer(null);
+        barRendererBlue.setBarPainter(new StandardBarPainter());
         CategoryAxis categoryAxisBlue = (CategoryAxis) plotBlue.getDomainAxis();
         categoryAxisBlue.setVisible(false);
         ValueAxis valueAxisBlue = (ValueAxis) plotBlue.getRangeAxis();
@@ -140,7 +158,10 @@ public class HistogramAction{
         plotAlpha.setBackgroundPaint(Color.white);
         BarRenderer barRendererAlpha = (BarRenderer) plotAlpha.getRenderer();
         barRendererAlpha.setPaint(Color.black);
-        barRendererAlpha.setItemMargin(0.0);
+        barRendererAlpha.setDrawBarOutline(false);
+        barRendererAlpha.setShadowVisible(false);
+        barRendererAlpha.setGradientPaintTransformer(null);
+        barRendererAlpha.setBarPainter(new StandardBarPainter());
         CategoryAxis categoryAxisAlpha = (CategoryAxis) plotAlpha.getDomainAxis();
         categoryAxisAlpha.setVisible(false);
         ValueAxis valueAxisAlpha = (ValueAxis) plotAlpha.getRangeAxis();

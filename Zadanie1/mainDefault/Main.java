@@ -26,7 +26,7 @@ public class Main {
 		// Load the image and hook it to the image display controller.
 		//fileToRead = JOptionPane.showInputDialog("Choose the image to read.");
 		//fileToRead = "CheerSmiles.png"; // Short version for debug purposes.
-		fileToRead = "D:\\GitHub\\PL_Masters_-_Sound_and_Image_Processing_-_historySucks\\src\\Lena.png";
+		fileToRead = "Lena.png";
 		ImageReading ReadImage = new ImageReading(fileToRead);
 			
 			
