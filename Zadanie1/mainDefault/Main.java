@@ -111,7 +111,7 @@ public class Main {
 																+" (3)>Zachodni.\n"
 																+" (4)>Pó³nocno-Zachodni.\n"));
 				
-				ReadImage.contrastAdjust(value);
+				ReadImage.foregroundFilter(value);
 				ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 				invokeFrame(2, frameX, frameY, AlterImage);
 			}
