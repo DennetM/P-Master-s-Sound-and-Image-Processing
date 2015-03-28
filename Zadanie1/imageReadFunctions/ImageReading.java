@@ -56,7 +56,11 @@ public class ImageReading {
 	
 	
 	// Initialize the altered image 
+<<<<<<< HEAD
 	private void initializeAltImage(){
+=======
+	public void initializeAltImage(){
+>>>>>>> origin/historySucks
 		this.x = img.getWidth();
 		this.y = img.getHeight();
 		this.altimg = new BufferedImage(x, y, img.getType());
@@ -73,7 +77,11 @@ public class ImageReading {
 	// Works on all channels.
 	private void stretchContrast(){
 		//Color variable to work with, initialized at top-left pixel.
+<<<<<<< HEAD
 		Color col = new Color(this.altimg.getRGB(0,0));
+=======
+		Color col = new Color(this.img.getRGB(0,0));
+>>>>>>> origin/historySucks
 		// Streched range for all channels:
 		int rNewMin = 0;
 		int rNewMax = 255;
@@ -119,7 +127,11 @@ public class ImageReading {
 				b = (col.getBlue() - bOldMin) * ((bNewMax - bNewMin) / (bOldMax - bOldMin)) + bNewMin;
 				
 				col = new Color(r,g,b);
+<<<<<<< HEAD
 				this.altimg.setRGB(i, j, col.getRGB());
+=======
+				this.img.setRGB(i, j, col.getRGB());
+>>>>>>> origin/historySucks
 			}
 		}
 		
@@ -504,5 +516,9 @@ public class ImageReading {
 		}
 	}
 	
+<<<<<<< HEAD
 }
 	
+=======
+}
+>>>>>>> origin/historySucks
