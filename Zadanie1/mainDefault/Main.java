@@ -74,16 +74,20 @@ public class Main {
 		while(secondFlowControl == true){
 			if (choice == 1){
 				innerchoice = JOptionPane.showInputDialog("Rozjaœniæ / Przyciemniæ?\n(+/-)");
-				if (innerchoice == "+") adjustTrigger = true;
+				if (innerchoice.equals("+")) adjustTrigger = true;
 				else adjustTrigger = false;
 				value = Integer.parseInt(JOptionPane.showInputDialog("Podaj wartoœæ:"));
 				
-				ReadImage.brightnessAdjust(adjustTrigger, value);	
+				ReadImage.brightnessAdjust(adjustTrigger, value);
+				ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
+				invokeFrame(2, frameX, frameY, AlterImage);
 			}
 			else if (choice == 2){
 				value = Integer.parseInt(JOptionPane.showInputDialog("Podaj wartoœæ:"));
 				
 				ReadImage.contrastAdjust(value);
+				ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
+				invokeFrame(2, frameX, frameY, AlterImage);
 			}
 			else if (choice == 3){				
 				ReadImage.invertAdjust();
@@ -92,9 +96,13 @@ public class Main {
 			}
 			else if (choice == 4){
 				ReadImage.meanFilter();
+				ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
+				invokeFrame(2, frameX, frameY, AlterImage);
 			}
 			else if (choice == 5){
 				ReadImage.medianFilter();
+				ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
+				invokeFrame(2, frameX, frameY, AlterImage);
 			}
 			else if (choice == 6){
 				value = Integer.parseInt(JOptionPane.showInputDialog("Podaj rodzaj filtru:\n"
@@ -104,31 +112,38 @@ public class Main {
 																+" (4)>Pó³nocno-Zachodni.\n"));
 				
 				ReadImage.contrastAdjust(value);
+				ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
+				invokeFrame(2, frameX, frameY, AlterImage);
 			}
 			else if (choice == 7){
 				value = Integer.parseInt(JOptionPane.showInputDialog("Podaj wartoœæ 'R'"));
 				
 				ReadImage.Rosenfeld(value);
+				ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
+				invokeFrame(2, frameX, frameY, AlterImage);
 			}
 			else if (choice == 8){
 				value = Integer.parseInt(JOptionPane.showInputDialog("Podaj wartoœæ minimaln¹."));
 				value2 = Integer.parseInt(JOptionPane.showInputDialog("Podaj wartoœæ alpha."));
 				
 				ReadImage.transformRaleigh(value, value2, hist);
+				ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
+				invokeFrame(2, frameX, frameY, AlterImage);
 			}			
 			innerchoice = JOptionPane.showInputDialog("Powtórzyæ z innymi ustawieniami?\n(y/n)");
-			if (innerchoice == "y") secondFlowControl = true;
-			else secondFlowControl = false;
+			System.out.println(innerchoice);
+			if (innerchoice.equals("y")) ;
+			else break;
 		}
 		innerchoice = JOptionPane.showInputDialog("Zapisaæ plik z przetworzonym obrazem?\n(y/n)");
-		if (innerchoice == "y"){
+		if (innerchoice.equals("y")){
 			fileToSave = JOptionPane.showInputDialog("Podaj nazwe pliku. \n"
 					+ "									[PAMIÊTAJ O ROZSZERZENIU PO KROPCE!! .png!!]");
 			ReadImage.saveImage(fileToSave);
 		}
 		
 		innerchoice = JOptionPane.showInputDialog("Powtórzyæ z innymi ustawieniami?\n(y/n)");
-		if (innerchoice == "y") firstFlowControl = true;
+		if (innerchoice.equals("y")) firstFlowControl = true;
 		else firstFlowControl = false;
 	}
 	
