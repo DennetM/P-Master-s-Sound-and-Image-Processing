@@ -44,7 +44,7 @@ public class Main {
 	//ReadImage.medianFilter();
 	//ReadImage.foregroundFilter(4);
 	//ReadImage.Rosenfeld(2);
-	ReadImage.transformRaleigh(25, 100, histAction);
+	ReadImage.transformRaleigh(0, 10, histAction);
 	ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 	
 	

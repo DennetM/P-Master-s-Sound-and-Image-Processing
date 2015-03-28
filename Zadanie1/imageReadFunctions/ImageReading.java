@@ -237,12 +237,18 @@ public class ImageReading {
 				// Yes... it'll take a while.
 				for (int fun = 0; fun<=col.getRed(); fun++){
 					redSum += hist.getHistValue("red", fun);
+					//greenSum += hist.getHistValue("red", fun);
+					//blueSum += hist.getHistValue("red", fun);
 				}
 				for (int fun = 0; fun<=col.getGreen(); fun++){
-					redSum += hist.getHistValue("green", fun);
+					//redSum += hist.getHistValue("green", fun);
+					greenSum += hist.getHistValue("green", fun);
+					//blueSum += hist.getHistValue("green", fun);
 				}
 				for (int fun = 0; fun<=col.getBlue(); fun++){
-					redSum += hist.getHistValue("blue", fun);
+					//redSum += hist.getHistValue("blue", fun);
+					//greenSum += hist.getHistValue("blue", fun);
+					blueSum += hist.getHistValue("blue", fun);
 				}
 				
 				//Now we can do the proper math, which is...
