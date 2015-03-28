@@ -2,13 +2,13 @@ package imageReadFunctions;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
 import javax.imageio.ImageIO;
+
+import prettyDrawings.HistogramAction;
 
 public class ImageReading {
 	
@@ -210,6 +210,55 @@ public class ImageReading {
 				col = new Color(r,g,b); // Overwrite the colour.
 				this.altimg.setRGB(i, j, col.getRGB());
 				
+			}
+		}
+	}
+	
+	// Raleigh Denisty Transform
+	// Flies through the entire image and applies the same formula to each pixel in each channel.
+	// gmin is the minimum colour density (aka low-end of the colour bracket), alph is a factor the user sets and I
+	// have no idea how the heck is it even supposed to work, so take it with a grain of salt.
+	public void transformRaleigh(int gmin, int alph, HistogramAction hist){
+		System.out.println("Initializing 2nd image.");
+		initializeAltImage();
+		System.out.println("2nd image initialized.");
+		
+		int N = x*y; // N is the total amount of pixels in our image, so width&height.
+		int r, g, b;
+		int redSum = 0; int greenSum = 0; int blueSum = 0;
+		
+		//And now we walk the image...
+		for (int i = 0; i<this.x; i++){
+			for (int j=0; j<this.y; j++){
+				//Grab the colour.
+				Color col = new Color(this.img.getRGB(i, j));
+				
+				//Each function requires a sum to be performed. We repeat the sum for each channel.
+				// Yes... it'll take a while.
+				for (int fun = 0; fun<=col.getRed(); fun++){
+					redSum += hist.getHistValue("red", fun);
+				}
+				for (int fun = 0; fun<=col.getGreen(); fun++){
+					redSum += hist.getHistValue("green", fun);
+				}
+				for (int fun = 0; fun<=col.getBlue(); fun++){
+					redSum += hist.getHistValue("blue", fun);
+				}
+				
+				//Now we can do the proper math, which is...
+				r = (int) (gmin + Math.pow(Math.pow( ( 2*Math.pow(alph, 2)*Math.log(redSum/N) ), -1),0.5));
+				g = (int) (gmin + Math.pow(Math.pow( ( 2*Math.pow(alph, 2)*Math.log(greenSum/N) ), -1),0.5));
+				b = (int) (gmin + Math.pow(Math.pow( ( 2*Math.pow(alph, 2)*Math.log(blueSum/N) ), -1),0.5));
+				
+				//Final safety check and sum clearout.
+				redSum = 0; greenSum = 0; blueSum = 0;
+				r = safetyCheck(r);
+				g = safetyCheck(g);
+				b = safetyCheck(b);
+				
+				//And finalize.
+				col = new Color(r,g,b);
+				this.altimg.setRGB(i, j, col.getRGB());
 			}
 		}
 	}

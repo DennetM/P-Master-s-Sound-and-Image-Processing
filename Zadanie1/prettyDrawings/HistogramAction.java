@@ -32,6 +32,22 @@ public class HistogramAction{
     DefaultCategoryDataset datasetBlue = new DefaultCategoryDataset();
     DefaultCategoryDataset datasetAlpha = new DefaultCategoryDataset();
     
+    public int getHistValue(String color, int i){
+    	if (color == "red"){
+    		return this.histogramRed[i];
+    	}
+    	if (color == "green"){
+    		return this.histogramGreen[i];
+    	}
+    	if (color == "blue"){
+    		return this.histogramBlue[i];
+    	}
+    	else {
+    		System.out.println("Wrong colour code, histogram value returned at 0.\n");
+    		return 0;
+    	}
+    }
+    
     private void initiateTables(){
     	for (int i = 0; i<256; i++){
     		this.histogramRed[i] = 0;

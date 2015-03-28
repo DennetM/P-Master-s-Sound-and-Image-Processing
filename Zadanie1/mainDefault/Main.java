@@ -43,7 +43,8 @@ public class Main {
 	//ReadImage.meanFilter();
 	//ReadImage.medianFilter();
 	//ReadImage.foregroundFilter(4);
-	ReadImage.Rosenfeld(2);
+	//ReadImage.Rosenfeld(2);
+	ReadImage.transformRaleigh(25, 100, histAction);
 	ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 	
 	
