@@ -4,7 +4,8 @@ import imageReadFunctions.ImageDisplay;
 import imageReadFunctions.ImageReading;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+
+import prettyDrawings.HistogramAction;
 
 
 
@@ -27,14 +28,14 @@ public class Main {
 	//fileToRead = "CheerSmiles.png"; // Short version for debug purposes.
 	fileToRead = "Lena.png";
 	ImageReading ReadImage = new ImageReading(fileToRead);
+	
+	HistogramAction histAction = new HistogramAction();
+	histAction.showTheThing(ReadImage);
 		
 		
 	ImageDisplay PrimeImage = new ImageDisplay(ReadImage, false);
 		
-		
-	
-	
-	
+
 	// Alter the image and hook THAT up to the image display controller.
 	//ReadImage.brightnessAdjust(true, 200);
 	//ReadImage.contrastAdjust(100);
@@ -44,6 +45,7 @@ public class Main {
 	//ReadImage.foregroundFilter(4);
 	ReadImage.Rosenfeld(2);
 	ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
+	
 	
 	
 	// Save the altered image
