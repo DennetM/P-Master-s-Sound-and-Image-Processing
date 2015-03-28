@@ -537,7 +537,7 @@ public class ImageReading {
 	public void saveImage(String saveFile){
 		File outputF = new File(saveFile);
 		try{
-			ImageIO.write(this.img, "png", outputF);
+			ImageIO.write(this.altimg, "png", outputF);
 		} catch (IOException e){
 			System.out.println("Something exploded when saving the file. Sorry!");
 		}
