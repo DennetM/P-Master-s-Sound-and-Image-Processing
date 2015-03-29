@@ -578,6 +578,38 @@ public class ImageReading {
 			}
 		}
 	}
+	
+	//Calculates the Mean Square Error value, aka MSE
+	private double calcMSE(String color){
+		double crossX = Math.pow(x,-1);
+		double crossY = Math.pow(y,-1);
+		double totalSum = 0;
+		
+		for(int i = 0;i<x;i++){
+			for(int j = 0;j<y;j++){
+				Color colprim = new Color(this.img.getRGB(i, j));
+				Color colchng = new Color(this.altimg.getRGB(i,j));
+				
+				if (color.equals("red")) totalSum += Math.pow(Math.abs(colchng.getRed() - colprim.getRed()),2);
+				if (color.equals("green")) totalSum += Math.pow(Math.abs(colchng.getGreen() - colprim.getGreen()),2);
+				if (color.equals("blue")) totalSum += Math.pow(Math.abs(colchng.getGreen() - colprim.getGreen()),2);
+			}
+		}
+		System.out.println("MSE Sum: "+totalSum);
+		System.out.println("MSE: "+(totalSum*crossX*crossY));
+		return (totalSum*crossX*crossY);
+	}
+	
+	//Calculates the Peak Signal-to-Noise Ratiom, aka PSNR.
+	public void calcPSNR(){
+		double rPSNR = 10 * Math.log(Math.pow(255,2)/calcMSE("red"));
+		double gPSNR = 10 * Math.log(Math.pow(255,2)/calcMSE("green"));
+		double bPSNR = 10* Math.log(Math.pow(255,2)/calcMSE("blue"));
+		System.out.println("PSNR Values:\n"
+						+" rPSNR: "+rPSNR+"\n"
+						+" gPSNR: "+gPSNR+"\n"
+						+" bPSNR: "+bPSNR);
+	}
 
 	
 	//Save the image we have to a file [NATIVE VERSION].

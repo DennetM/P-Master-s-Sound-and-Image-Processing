@@ -82,6 +82,7 @@ public class Main {
 				ReadImage.brightnessAdjust(adjustTrigger, value);
 				ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 				invokeFrame(2, frameX, frameY, AlterImage);
+				ReadImage.calcPSNR();
 			}
 			else if (choice == 2){
 				value = Integer.parseInt(JOptionPane.showInputDialog("Podaj wartoœæ:"));
@@ -89,21 +90,25 @@ public class Main {
 				ReadImage.contrastAdjust(value);
 				ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 				invokeFrame(2, frameX, frameY, AlterImage);
+				ReadImage.calcPSNR();
 			}
 			else if (choice == 3){				
 				ReadImage.invertAdjust();
 				ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 				invokeFrame(2, frameX, frameY, AlterImage);
+				ReadImage.calcPSNR();
 			}
 			else if (choice == 4){
 				ReadImage.meanFilter();
 				ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 				invokeFrame(2, frameX, frameY, AlterImage);
+				ReadImage.calcPSNR();
 			}
 			else if (choice == 5){
 				ReadImage.medianFilter();
 				ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 				invokeFrame(2, frameX, frameY, AlterImage);
+				ReadImage.calcPSNR();
 			}
 			else if (choice == 6){
 				value = Integer.parseInt(JOptionPane.showInputDialog("Podaj rodzaj filtru:\n"
@@ -115,6 +120,7 @@ public class Main {
 				ReadImage.foregroundFilter(value);
 				ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 				invokeFrame(2, frameX, frameY, AlterImage);
+				ReadImage.calcPSNR();
 			}
 			else if (choice == 7){
 				value = Integer.parseInt(JOptionPane.showInputDialog("Podaj wartoœæ 'R'"));
@@ -122,6 +128,7 @@ public class Main {
 				ReadImage.Rosenfeld(value);
 				ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 				invokeFrame(2, frameX, frameY, AlterImage);
+				ReadImage.calcPSNR();
 			}
 			else if (choice == 8){
 				value = Integer.parseInt(JOptionPane.showInputDialog("Podaj wartoœæ minimaln¹."));
@@ -130,6 +137,7 @@ public class Main {
 				ReadImage.transformRaleigh(value, value2, hist);
 				ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 				invokeFrame(2, frameX, frameY, AlterImage);
+				ReadImage.calcPSNR();
 			}			
 			innerchoice = JOptionPane.showInputDialog("Powtórzyæ z innymi ustawieniami?\n(y/n)");
 			System.out.println(innerchoice);
@@ -171,8 +179,9 @@ public class Main {
 	//ReadImage.meanFilter();
 	//ReadImage.medianFilter();
 	//ReadImage.foregroundFilter(4);
-	//ReadImage.Rosenfeld(2);
-	ReadImage.transformRaleigh(1, 1, histAction);
+	ReadImage.Rosenfeld(2);
+	//ReadImage.transformRaleigh(1, 1, histAction);
+	ReadImage.calcPSNR();
 	ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 	
 	
