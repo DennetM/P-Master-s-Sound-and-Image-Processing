@@ -9,4 +9,4 @@
 ### * ~~Modyfikacja obrazu H3~~
 ### * ~~Filtracja splotowa S4~~
 ### * ~~Filtracja nieliniowa O5~~
-### * SPRAWOZDANIE
+### * ~~SPRAWOZDANIE~~
