@@ -47,6 +47,7 @@ public class Main {
 	int frameX = 800;
 	int frameY = 600;
 	
+	
 	JOptionPane.showMessageDialog(null, "Podstawowy Program Przetwarzania Obrazu i DŸwiêku. \n\n Autorzy:\n Paula Pszczo³a\n £ukasz Ko³odziejczyk.");
 	fileToRead = JOptionPane.showInputDialog("Wybierz obraz do wczytania.");
 	//fileToRead = "Lena.png";
@@ -149,7 +150,7 @@ public class Main {
 	
 	/*
 	//============
-	// Program starts here:
+	// Debug:
 	// Load the image and hook it to the image display controller.
 	//fileToRead = JOptionPane.showInputDialog("Choose the image to read.");
 	//fileToRead = "CheerSmiles.png"; // Short version for debug purposes.
@@ -171,7 +172,7 @@ public class Main {
 	//ReadImage.medianFilter();
 	//ReadImage.foregroundFilter(4);
 	//ReadImage.Rosenfeld(2);
-	ReadImage.transformRaleigh(0, 10, histAction);
+	ReadImage.transformRaleigh(1, 1, histAction);
 	ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 	
 	
@@ -197,7 +198,7 @@ public class Main {
 	isoFrame.setLocation(frameX, 0);
 	isoFrame.setContentPane(AlterImage);
 	isoFrame.setVisible(true);
-	
 	*/
+	
 	}
 }

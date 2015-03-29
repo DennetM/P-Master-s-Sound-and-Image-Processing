@@ -218,14 +218,13 @@ public class ImageReading {
 	// Flies through the entire image and applies the same formula to each pixel in each channel.
 	// gmin is the minimum colour density (aka low-end of the colour bracket), alph is a factor the user sets and I
 	// have no idea how the heck is it even supposed to work, so take it with a grain of salt.
-	public void transformRaleigh(int gmin, int alph, HistogramAction hist){
+	public void transformRaleigh(int gmin, double alph, HistogramAction hist){
 		System.out.println("Initializing 2nd image.");
 		initializeAltImage();
 		System.out.println("2nd image initialized.");
 		
-		int N = x*y; // N is the total amount of pixels in our image, so width&height.
-		int r, g, b;
-		int redSum = 0; int greenSum = 0; int blueSum = 0;
+		double N = x*y; // N is the total amount of pixels in our image, so width&height.
+		
 		
 		//And now we walk the image...
 		for (int i = 0; i<this.x; i++){
@@ -235,29 +234,71 @@ public class ImageReading {
 				
 				//Each function requires a sum to be performed. We repeat the sum for each channel.
 				// Yes... it'll take a while.
+				
+				int redSum = 0; int greenSum = 0; int blueSum = 0;
 				for (int fun = 0; fun<=col.getRed(); fun++){
 					redSum += hist.getHistValue("red", fun);
-					//greenSum += hist.getHistValue("red", fun);
-					//blueSum += hist.getHistValue("red", fun);
 				}
 				for (int fun = 0; fun<=col.getGreen(); fun++){
-					//redSum += hist.getHistValue("green", fun);
 					greenSum += hist.getHistValue("green", fun);
-					//blueSum += hist.getHistValue("green", fun);
 				}
 				for (int fun = 0; fun<=col.getBlue(); fun++){
-					//redSum += hist.getHistValue("blue", fun);
-					//greenSum += hist.getHistValue("blue", fun);
 					blueSum += hist.getHistValue("blue", fun);
 				}
 				
+				//MathDebug
+				/*
+				double sumbyN;
+				sumbyN = redSum/N;
+				double logSum;
+				logSum = Math.pow(Math.log(sumbyN),-1);
+				double bigSum;
+				bigSum = 2 * Math.pow(alph,2) * logSum;
+				double finallog;
+				finallog = Math.sqrt(bigSum);
+				int stuff;
+				stuff = (int) finallog + gmin;
+;				if (i<2&&j<2){
+					System.out.println("x: "+this.x+" y: "+this.y);
+					System.out.println("Wartoœæ N:" +N);
+					System.out.println("1/N * Suma: "+sumbyN);
+					System.out.println("Logarytm sumy do -1: "+logSum);
+					System.out.println("Wartoœæ 2*Potêga:" +(2*Math.pow(alph,2)));
+					System.out.println("Wartoœæ dodawania: "+bigSum);
+					System.out.println("Ostatnia wartoœæ do ^0.5(pierwiastekkwdr): "+finallog);
+					System.out.println("Wynik:" +stuff);
+				}
+				*/
+				
+				
 				//Now we can do the proper math, which is...
-				r = (int) (gmin + Math.pow(Math.pow( ( 2*Math.pow(alph, 2)*Math.log(redSum/N) ), -1),0.5));
-				g = (int) (gmin + Math.pow(Math.pow( ( 2*Math.pow(alph, 2)*Math.log(greenSum/N) ), -1),0.5));
-				b = (int) (gmin + Math.pow(Math.pow( ( 2*Math.pow(alph, 2)*Math.log(blueSum/N) ), -1),0.5));
+				int r, g, b;
+				//r
+				double sumR = redSum/N;
+				double logSumR = Math.pow(Math.log(sumR),-1);
+				double expandSumR = 2 * Math.pow(alph,2) * logSumR;
+				double expandsqrtR = Math.sqrt(expandSumR);
+				int finalR = (int) expandsqrtR + gmin;
+				r = finalR;
+				
+				//g
+				double sumG = greenSum/N;
+				double logSumG = Math.pow(Math.log(sumG),-1);
+				double expandSumG = 2 * Math.pow(alph,2) * logSumG;
+				double expandsqrtG = Math.sqrt(expandSumG);
+				int finalG = (int) expandsqrtG + gmin;
+				g = finalG;
+				
+				//b
+				double sumB = blueSum/N;
+				double logSumB = Math.pow(Math.log(sumB),-1);
+				double expandSumB = 2 * Math.pow(alph,2) * logSumB;
+				double expandsqrtB = Math.sqrt(expandSumB);
+				int finalB = (int) expandsqrtB + gmin;
+				b = finalB;
+				
 				
 				//Final safety check and sum clearout.
-				redSum = 0; greenSum = 0; blueSum = 0;
 				r = safetyCheck(r);
 				g = safetyCheck(g);
 				b = safetyCheck(b);
