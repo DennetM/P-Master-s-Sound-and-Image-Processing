@@ -218,7 +218,7 @@ public class ImageReading {
 	// Flies through the entire image and applies the same formula to each pixel in each channel.
 	// gmin is the minimum colour density (aka low-end of the colour bracket), alph is a factor the user sets and I
 	// have no idea how the heck is it even supposed to work, so take it with a grain of salt.
-	public void transformRaleigh(int gmin, double alph, HistogramAction hist){
+	public void transformRaleigh(int gmin, int gmax, HistogramAction hist){
 		System.out.println("Initializing 2nd image.");
 		initializeAltImage();
 		System.out.println("2nd image initialized.");
