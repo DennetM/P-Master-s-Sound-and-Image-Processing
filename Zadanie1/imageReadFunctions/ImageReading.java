@@ -221,7 +221,7 @@ public class ImageReading {
 	
 	// Raleigh Denisty Transform
 	// Flies through the entire image and applies the same formula to each pixel in each channel.
-	// gmin is the minimum colour density (aka low-end of the colour bracket), alph is a factor the user sets and I
+	// gmin is the minimum colour density (aka low-end of the colour bracket), gmax is the opposite the user sets and I
 	// have no idea how the heck is it even supposed to work, so take it with a grain of salt.
 	public void transformRaleigh(int gmin, int gmax, HistogramAction hist){
 		System.out.println("Initializing 2nd image.");
@@ -229,7 +229,6 @@ public class ImageReading {
 		System.out.println("2nd image initialized.");
 		
 		double N = x*y; // N is the total amount of pixels in our image, so width&height.
-		
 		
 		//And now we walk the image...
 		for (int i = 0; i<this.x; i++){
@@ -278,26 +277,31 @@ public class ImageReading {
 				
 				//Now we can do the proper math, which is...
 				int r, g, b;
-				//r
+				
+				//r - red section, bit by bit.
+				double alphSquareRed = (Math.pow((gmax-gmin),2)) / (-2 * Math.log((hist.getHistValue("red", 0)/N)));
 				double sumR = redSum/N;
 				double logSumR = Math.pow(Math.log(sumR),-1);
-				double expandSumR = 2 * Math.pow(alph,2) * logSumR;
+				double expandSumR = 2 * alphSquareRed * logSumR;
 				double expandsqrtR = Math.sqrt(expandSumR);
+				if (i<2&&j<2) System.out.println("expandedsqrtR: "+expandsqrtR);
 				int finalR = (int) expandsqrtR + gmin;
 				r = finalR;
 				
-				//g
+				//g - green section
+				double alphSquareGreen = (Math.pow((gmax-gmin),2)) / (-2 * Math.log((hist.getHistValue("green", 0)/N)));
 				double sumG = greenSum/N;
 				double logSumG = Math.pow(Math.log(sumG),-1);
-				double expandSumG = 2 * Math.pow(alph,2) * logSumG;
+				double expandSumG = 2 * alphSquareGreen * logSumG;
 				double expandsqrtG = Math.sqrt(expandSumG);
 				int finalG = (int) expandsqrtG + gmin;
 				g = finalG;
 				
-				//b
+				//b - blue section
+				double alphSquareBlue = (Math.pow((gmax-gmin),2)) / (-2 * Math.log((hist.getHistValue("blue", 0)/N)));
 				double sumB = blueSum/N;
 				double logSumB = Math.pow(Math.log(sumB),-1);
-				double expandSumB = 2 * Math.pow(alph,2) * logSumB;
+				double expandSumB = 2 * alphSquareBlue * logSumB;
 				double expandsqrtB = Math.sqrt(expandSumB);
 				int finalB = (int) expandsqrtB + gmin;
 				b = finalB;

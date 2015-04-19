@@ -46,7 +46,7 @@ public class Main {
 	
 	int frameX = 800;
 	int frameY = 600;
-	/*
+	
 	
 	JOptionPane.showMessageDialog(null, "Podstawowy Program Przetwarzania Obrazu i DŸwiêku. \n\n Autorzy:\n Paula Pszczo³a\n £ukasz Ko³odziejczyk.");
 	fileToRead = JOptionPane.showInputDialog("Wybierz obraz do wczytania.");
@@ -155,9 +155,9 @@ public class Main {
 		if (innerchoice.equals("y")) firstFlowControl = true;
 		else firstFlowControl = false;
 	}
-	*/
 	
 	
+	/*
 	//============
 	// Debug:
 	// Load the image and hook it to the image display controller.
@@ -178,12 +178,12 @@ public class Main {
 	//ReadImage.contrastAdjust(100);
 	//ReadImage.invertAdjust();
 	//ReadImage.invertAdjust();
-	ReadImage.meanFilter();
-	ReadImage.meanFilter();
+	//ReadImage.meanFilter();
+	//ReadImage.meanFilter();
 	//ReadImage.medianFilter();
 	//ReadImage.foregroundFilter(1);
 	//ReadImage.Rosenfeld(2);
-	//ReadImage.transformRaleigh(1, 1, histAction);
+	ReadImage.transformRaleigh(0, 1, histAction);
 	//ReadImage.calcPSNR();
 	ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 	
@@ -210,7 +210,7 @@ public class Main {
 	isoFrame.setLocation(frameX, 0);
 	isoFrame.setContentPane(AlterImage);
 	isoFrame.setVisible(true);
-	
+	*/
 	
 	}
 }
