@@ -46,7 +46,7 @@ public class Main {
 	
 	int frameX = 800;
 	int frameY = 600;
-	
+	/*
 	
 	JOptionPane.showMessageDialog(null, "Podstawowy Program Przetwarzania Obrazu i DŸwiêku. \n\n Autorzy:\n Paula Pszczo³a\n £ukasz Ko³odziejczyk.");
 	fileToRead = JOptionPane.showInputDialog("Wybierz obraz do wczytania.");
@@ -155,14 +155,15 @@ public class Main {
 		if (innerchoice.equals("y")) firstFlowControl = true;
 		else firstFlowControl = false;
 	}
+	*/
 	
-	/*
+	
 	//============
 	// Debug:
 	// Load the image and hook it to the image display controller.
 	//fileToRead = JOptionPane.showInputDialog("Choose the image to read.");
 	//fileToRead = "CheerSmiles.png"; // Short version for debug purposes.
-	fileToRead = "Lena.png";
+	fileToRead = "LenaImpuls.png";
 	ImageReading ReadImage = new ImageReading(fileToRead);
 	
 	HistogramAction histAction = new HistogramAction();
@@ -176,12 +177,14 @@ public class Main {
 	//ReadImage.brightnessAdjust(true, 200);
 	//ReadImage.contrastAdjust(100);
 	//ReadImage.invertAdjust();
-	//ReadImage.meanFilter();
+	//ReadImage.invertAdjust();
+	ReadImage.meanFilter();
+	ReadImage.meanFilter();
 	//ReadImage.medianFilter();
-	//ReadImage.foregroundFilter(4);
-	ReadImage.Rosenfeld(2);
+	//ReadImage.foregroundFilter(1);
+	//ReadImage.Rosenfeld(2);
 	//ReadImage.transformRaleigh(1, 1, histAction);
-	ReadImage.calcPSNR();
+	//ReadImage.calcPSNR();
 	ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 	
 	
@@ -207,7 +210,7 @@ public class Main {
 	isoFrame.setLocation(frameX, 0);
 	isoFrame.setContentPane(AlterImage);
 	isoFrame.setVisible(true);
-	*/
+	
 	
 	}
 }

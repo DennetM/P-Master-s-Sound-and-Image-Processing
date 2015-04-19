@@ -60,6 +60,11 @@ public class ImageReading {
 		this.x = img.getWidth();
 		this.y = img.getHeight();
 		this.altimg = new BufferedImage(x, y, img.getType());
+		for (int i=0; i<this.x; i++){
+			for (int j=0; j<this.y; j++){
+				this.altimg.setRGB(i, j, this.img.getRGB(i,j));
+			}
+		}
 	}
 	
 	private int safetyCheck(int val){
@@ -119,7 +124,7 @@ public class ImageReading {
 				b = (col.getBlue() - bOldMin) * ((bNewMax - bNewMin) / (bOldMax - bOldMin)) + bNewMin;
 				
 				col = new Color(r,g,b);
-				this.img.setRGB(i, j, col.getRGB());
+				this.altimg.setRGB(i, j, col.getRGB());
 			}
 		}
 		
