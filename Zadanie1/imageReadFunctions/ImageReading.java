@@ -281,8 +281,8 @@ public class ImageReading {
 				//r - red section, bit by bit.
 				double alphSquareRed = (Math.pow((gmax-gmin),2)) / (-2 * Math.log((hist.getHistValue("red", 0)/N)));
 				double sumR = redSum/N;
-				double logSumR = Math.pow(Math.log(sumR),-1);
-				double expandSumR = 2 * alphSquareRed * logSumR;
+				double logSumR = Math.pow(Math.log(sumR),1);
+				double expandSumR = -2 * alphSquareRed * logSumR;
 				double expandsqrtR = Math.sqrt(expandSumR);
 				if (i<2&&j<2) System.out.println("expandedsqrtR: "+expandsqrtR);
 				int finalR = (int) expandsqrtR + gmin;
@@ -291,8 +291,8 @@ public class ImageReading {
 				//g - green section
 				double alphSquareGreen = (Math.pow((gmax-gmin),2)) / (-2 * Math.log((hist.getHistValue("green", 0)/N)));
 				double sumG = greenSum/N;
-				double logSumG = Math.pow(Math.log(sumG),-1);
-				double expandSumG = 2 * alphSquareGreen * logSumG;
+				double logSumG = Math.pow(Math.log(sumG),1);
+				double expandSumG = -2 * alphSquareGreen * logSumG;
 				double expandsqrtG = Math.sqrt(expandSumG);
 				int finalG = (int) expandsqrtG + gmin;
 				g = finalG;
@@ -300,8 +300,8 @@ public class ImageReading {
 				//b - blue section
 				double alphSquareBlue = (Math.pow((gmax-gmin),2)) / (-2 * Math.log((hist.getHistValue("blue", 0)/N)));
 				double sumB = blueSum/N;
-				double logSumB = Math.pow(Math.log(sumB),-1);
-				double expandSumB = 2 * alphSquareBlue * logSumB;
+				double logSumB = Math.pow(Math.log(sumB),1);
+				double expandSumB = -2 * alphSquareBlue * logSumB;
 				double expandsqrtB = Math.sqrt(expandSumB);
 				int finalB = (int) expandsqrtB + gmin;
 				b = finalB;
