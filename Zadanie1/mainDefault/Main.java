@@ -167,7 +167,7 @@ public class Main {
 	// Load the image and hook it to the image display controller.
 	//fileToRead = JOptionPane.showInputDialog("Choose the image to read.");
 	//fileToRead = "CheerSmiles.png"; // Short version for debug purposes.
-	fileToRead = "LenaImpuls.png";
+	fileToRead = "Lena.png";
 	ImageReading ReadImage = new ImageReading(fileToRead);
 	FourierTransformation fftTrans = new FourierTransformation(fileToRead);
 	
@@ -183,7 +183,7 @@ public class Main {
 
 	// Alter the image and hook THAT up to the image display controller.
 	//ReadImage.brightnessAdjust(true, 200);
-	//ReadImage.contrastAdjust(100);
+	ReadImage.contrastAdjust(100);
 	//ReadImage.invertAdjust();
 	//ReadImage.invertAdjust();
 	//ReadImage.meanFilter();
