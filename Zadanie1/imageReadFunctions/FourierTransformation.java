@@ -278,7 +278,22 @@ public class FourierTransformation extends ImageReading {
 	//Visualization function (DEBUGMODE)
 	//Turns the Magnitude (real) spectrum into an image that can be displayed.
 	public void visualize(){
-		//TO-DO: Change as you see fit.
+		super.initializeAltImage();
+		for(int i = 0; i<newWidth; i++){
+			for(int j=0; j<newHeight;j++){
+				int r, g, b;
+				r = (int) rCom[i][j].getReal();
+				g = (int) rCom[i][j].getReal();
+				b = (int) rCom[i][j].getReal();
+				
+				r = super.safetyCheck(r);
+				g = super.safetyCheck(g);
+				b = super.safetyCheck(b);
+				
+				Color col = new Color(r,g,b);
+				super.altimg.setRGB(i,j,col.getRGB());
+			}
+		}
 	}
 	
 	
