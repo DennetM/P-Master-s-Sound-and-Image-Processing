@@ -45,7 +45,7 @@ public class FourierTransformation extends ImageReading {
 	public double[][] bRe; //blue Real.
 	public double[][] bIm; //blue Imaginary.
 	
-	FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD); // Our FFT. Using the Standard formula.
+	FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.UNITARY); // Our FFT. Using the Standard formula.
 																					// Again, don't ask. Better left alone.
 	
 	//=============================
