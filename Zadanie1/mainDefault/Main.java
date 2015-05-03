@@ -196,7 +196,7 @@ public class Main {
 	//ReadImage.calcPSNR();
 	//ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 	
-	fftTrans.visualizeMag();
+	fftTrans.visualize();
 	ImageDisplay AlterImage = new ImageDisplay(fftTrans, true);
 	
 	

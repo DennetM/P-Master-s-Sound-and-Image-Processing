@@ -227,7 +227,7 @@ public class FourierTransformation extends ImageReading {
 	
 	//The main inverse FFT function.
 	//Warning - using this function overwrites the rgbCom tables with inverted FFT. In essence this means imaginaries are gone and reals
-	// SHOULD be our image. We can't do FFT algos until we revert the image through a forward FFT once again.
+	// are our image. We can't do FFT algos until we revert the image through a forward FFT once again.
 	public void FFTinverse(){
 		//The entire algorithm works just like its forward cousin, instead operating solely on Complex[]es.
 		
@@ -275,26 +275,10 @@ public class FourierTransformation extends ImageReading {
 		updateSeparates();
 	}
 	
-	//Visualization function.
+	//Visualization function (DEBUGMODE)
 	//Turns the Magnitude (real) spectrum into an image that can be displayed.
-	public void visualizeMag(){
-		//For test purposes, only works on Red spectrum.
-		super.initializeAltImage();
-		for(int i = 0; i<newWidth; i++){
-			for(int j=0; j<newHeight;j++){
-				int r, g, b;
-				r = (int) rCom[i][j].getReal();
-				g = (int) gCom[i][j].getReal();
-				b = (int) bCom[i][j].getReal();
-				
-				r = super.safetyCheck(r);
-				g = super.safetyCheck(g);
-				b = super.safetyCheck(b);
-				
-				Color col = new Color(r,g,b);
-				super.altimg.setRGB(i,j,col.getRGB());
-			}
-		}
+	public void visualize(){
+		//TO-DO: Change as you see fit.
 	}
 	
 	

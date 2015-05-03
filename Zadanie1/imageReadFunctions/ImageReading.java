@@ -248,32 +248,7 @@ public class ImageReading {
 				}
 				for (int fun = 0; fun<=col.getBlue(); fun++){
 					blueSum += hist.getHistValue("blue", fun);
-				}
-				
-				//MathDebug
-				/*
-				double sumbyN;
-				sumbyN = redSum/N;
-				double logSum;
-				logSum = Math.pow(Math.log(sumbyN),-1);
-				double bigSum;
-				bigSum = 2 * Math.pow(alph,2) * logSum;
-				double finallog;
-				finallog = Math.sqrt(bigSum);
-				int stuff;
-				stuff = (int) finallog + gmin;
-;				if (i<2&&j<2){
-					System.out.println("x: "+this.x+" y: "+this.y);
-					System.out.println("Wartoœæ N:" +N);
-					System.out.println("1/N * Suma: "+sumbyN);
-					System.out.println("Logarytm sumy do -1: "+logSum);
-					System.out.println("Wartoœæ 2*Potêga:" +(2*Math.pow(alph,2)));
-					System.out.println("Wartoœæ dodawania: "+bigSum);
-					System.out.println("Ostatnia wartoœæ do ^0.5(pierwiastekkwdr): "+finallog);
-					System.out.println("Wynik:" +stuff);
-				}
-				*/
-				
+				}			
 				
 				//Now we can do the proper math, which is...
 				int r, g, b;
@@ -407,7 +382,7 @@ public class ImageReading {
 		//Normalize the picture, THREE TABLES EDITION!
 		// Because sometimes life likes throwing logs under your feet.
 		// Works the same as the above algorithm, instead operates on three int tables and not Colors.
-		private void stretchContrastTableEdition(int[][] r, int[][] g, int[][] b){
+		protected void stretchContrastTableEdition(int[][] r, int[][] g, int[][] b){
 			// Streched range for all channels:
 			int rNewMin = 0;
 			int rNewMax = 255;
