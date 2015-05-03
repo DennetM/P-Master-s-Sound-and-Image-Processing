@@ -223,7 +223,6 @@ public class FourierTransformation extends ImageReading {
 		
 		//With this done we split the real and imaginary parts for easier viewing.
 		updateSeparates();
-		//TO-DO Paula: Wyœwietlane widma mocy (rgbRe) i czêstotliwoœci (rgbIm) dla obrazu.
 	}
 	
 	//The main inverse FFT function.
@@ -274,6 +273,28 @@ public class FourierTransformation extends ImageReading {
 		}
 		System.out.println("Finsihed inversion-FFT by rows. Finished inverted FFT.");
 		updateSeparates();
+	}
+	
+	//Visualization function.
+	//Turns the Magnitude (real) spectrum into an image that can be displayed.
+	public void visualizeMag(){
+		//For test purposes, only works on Red spectrum.
+		super.initializeAltImage();
+		for(int i = 0; i<newWidth; i++){
+			for(int j=0; j<newHeight;j++){
+				int r, g, b;
+				r = (int) rCom[i][j].getReal();
+				g = (int) gCom[i][j].getReal();
+				b = (int) bCom[i][j].getReal();
+				
+				r = super.safetyCheck(r);
+				g = super.safetyCheck(g);
+				b = super.safetyCheck(b);
+				
+				Color col = new Color(r,g,b);
+				super.altimg.setRGB(i,j,col.getRGB());
+			}
+		}
 	}
 	
 	

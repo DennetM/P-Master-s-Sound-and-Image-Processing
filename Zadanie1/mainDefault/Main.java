@@ -173,7 +173,7 @@ public class Main {
 	
 
 	fftTrans.FFTstandard();
-	fftTrans.FFTinverse();
+	//fftTrans.FFTinverse();
 	
 	HistogramAction histAction = new HistogramAction();
 	histAction.showTheThing(ReadImage);
@@ -184,7 +184,7 @@ public class Main {
 
 	// Alter the image and hook THAT up to the image display controller.
 	//ReadImage.brightnessAdjust(true, 200);
-	ReadImage.contrastAdjust(100);
+	//ReadImage.contrastAdjust(100);
 	//ReadImage.invertAdjust();
 	//ReadImage.invertAdjust();
 	//ReadImage.meanFilter();
@@ -194,7 +194,10 @@ public class Main {
 	//ReadImage.Rosenfeld(2);
 	//ReadImage.transformRaleigh(0, 1, histAction);
 	//ReadImage.calcPSNR();
-	ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
+	//ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
+	
+	fftTrans.visualizeMag();
+	ImageDisplay AlterImage = new ImageDisplay(fftTrans, true);
 	
 	
 	

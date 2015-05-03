@@ -56,7 +56,7 @@ public class ImageReading {
 	
 	
 	// Initialize the altered image 
-	private void initializeAltImage(){
+	protected void initializeAltImage(){
 		this.x = img.getWidth();
 		this.y = img.getHeight();
 		this.altimg = new BufferedImage(x, y, img.getType());
@@ -67,7 +67,7 @@ public class ImageReading {
 		}
 	}
 	
-	private int safetyCheck(int val){
+	protected int safetyCheck(int val){
 		if (val > 255) val = 255;
 		if (val < 0) val = 0;
 		return val;
