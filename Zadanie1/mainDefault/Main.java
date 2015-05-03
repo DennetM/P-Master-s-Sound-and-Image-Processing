@@ -166,13 +166,13 @@ public class Main {
 	// Debug:
 	// Load the image and hook it to the image display controller.
 	//fileToRead = JOptionPane.showInputDialog("Choose the image to read.");
-	//fileToRead = "CheerSmiles.png"; // Short version for debug purposes.
-	fileToRead = "Lena.png";
+	fileToRead = "CheerSmiles.png"; // Short version for debug purposes.
+	//fileToRead = "Lena.png";
 	ImageReading ReadImage = new ImageReading(fileToRead);
 	FourierTransformation fftTrans = new FourierTransformation(fileToRead);
 	
 
-	fftTrans.standardFFT(TransformType.FORWARD);
+	fftTrans.standardFFT();
 	
 	HistogramAction histAction = new HistogramAction();
 	histAction.showTheThing(ReadImage);

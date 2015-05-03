@@ -19,24 +19,31 @@ import org.apache.commons.math3.transform.TransformType;
 public class FourierTransformation extends ImageReading {
 	
 	//Variables
-	protected double[] r; //Flat red, what we'll be transforming.
-	protected double[] g; //Flat green.
-	protected double[] b; //Flat blue.
+	//2D tables that represent the flat colourspace we'll be filling out during our transformation.
+	protected double[][] r;
+	protected double[][] g;
+	protected double[][] b;
 	
-	protected Complex[] rCom; //red Complex.
-	public double[] rRe; //red Real.
-	public double[] rIm; //red Imaginary.
+	int baseWidth; // Base width of the image, we need to remember it.
+	int baseHeight; // Base height of the image, we need to remember it as well.
 	
-	protected Complex[] gCom; //green Complex.
-	public double[] gRe; //green Real.
-	public double[] gIm; //green Imaginary.
+	int newWidth; // Same thing, but after the FFT padding.
+	int newHeight; // As above.
 	
-	protected Complex[] bCom; //blue Complex.
-	public double[] bRe; //blue Real.
-	public double[] bIm; //blue Imaginary.
+	//2D tables that represent the specific channels after being passed through a 2D FFT.
+	//Com is the sum-total Complex Number table, which will be our main operating procedure.
+	//Re and Im tables are tables that separate the imaginary and real values of the complex number, for visualization.
+	protected Complex[][] rCom; //red Complex.
+	public double[][] rRe; //red Real.
+	public double[][] rIm; //red Imaginary.
 	
-	public static enum Type {FOWARD, INVERSE} //A type to control if we want to make it a standard FFT or inverse FFT.
-												//This is required for the thing to work in the first place, so mind!
+	protected Complex[][] gCom; //green Complex.
+	public double[][] gRe; //green Real.
+	public double[][] gIm; //green Imaginary.
+	
+	protected Complex[][] bCom; //blue Complex.
+	public double[][] bRe; //blue Real.
+	public double[][] bIm; //blue Imaginary.
 	
 	FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD); // Our FFT. Using the Standard formula.
 																					// Again, don't ask. Better left alone.
@@ -46,42 +53,28 @@ public class FourierTransformation extends ImageReading {
 	
 	//Constructor
 	//...which is essentially our ImageReading constructor.
-	//Except we enrich it to plaster the R G B values from the image into the table.
+	//Except we enrich it to plaster the R G B values from the image into the tables.
 	public FourierTransformation(String x){
 		super(x); //We-do what we did in the original.
 		
-		/*
-		//Initialize the table values.
-		int[][] tempR = new int[this.img.getWidth()][this.img.getHeight()];
-		int[][] tempG = new int[this.img.getWidth()][this.img.getHeight()];
-		int[][] tempB = new int[this.img.getWidth()][this.img.getHeight()];
+		this.baseWidth = this.img.getWidth();
+		this.baseHeight = this.img.getHeight();
 		
-		List<Double> rlist = new ArrayList<Double>();
-		List<Double> glist = new ArrayList<Double>();
-		List<Double> blist = new ArrayList<Double>();
-		//Map the values one by one.
-		for (int i = 0; i<this.img.getWidth(); i++){
-			for(int j = 0; j<this.img.getHeight(); j++){
-				Color tempCol = new Color(this.img.getRGB(i, j));
-				tempR[i][j] = tempCol.getRed();
-				rlist.add((double) tempR[i][j]);
-				tempG[i][j] = tempCol.getGreen();
-				glist.add((double) tempG[i][j]);
-				tempB[i][j] = tempCol.getBlue();
-				blist.add((double) tempB[i][j]);
+		//We initialize the sizes of our tables.
+		this.r = new double[baseWidth][baseHeight];
+		this.g = new double[baseWidth][baseHeight];
+		this.b = new double[baseWidth][baseHeight];
+		
+		//...and now we copy the respective data into the right section of the image.
+		for(int i = 0; i<baseWidth; i++){
+			for(int j = 0; j<baseHeight; j++){
+				Color tempCol = new Color (this.img.getRGB(i,j));
+				r[i][j] = tempCol.getRed();
+				g[i][j] = tempCol.getGreen();
+				b[i][j] = tempCol.getBlue();
 			}
 		}
-		this.r = new double[rlist.size()];
-		this.g = new double[glist.size()];
-		this.b = new double[blist.size()];
-		for (int i=0; i<this.r.length; i++){
-			this.r[i] = rlist.get(i);
-			this.g[i] = glist.get(i);
-			this.b[i] = blist.get(i);
-		}
-		//At this point we have our RGB tables filled by rows. We can now get the data going.
-		 
-		 */
+		//We now have three 2D tables filled with their respective colours. Wowzers.
 	}
 	
 
@@ -89,72 +82,149 @@ public class FourierTransformation extends ImageReading {
 	//=============================
 	
 	//Functions, also known as "where things get interesting" section.
-	//pad() - checks the length of R, G and B tables and compares them to the nearest power of 2.
-	// This is a requirement for FFT to work. If we don't fit, we jump higher and pad the tables with 0s.
+	
+	//Padding function - this function checks the width and height of the image we've grabbed and pads it to the nearest power of 2.
+	//This is necessary to perform an FFT later on, so we'll have to bear with it.
 	private void pad(){
-		/*
-		//This is the power index (aka the power value) we're looking for.
+		//We'll pad the array to a rectangle for clarity, so let's first check which is greater - width or height.
+		int padding;
+		//Copy the array to a safecopy.
+		double[][] tempArrayR = new double[baseWidth][baseHeight];
+		double[][] tempArrayG = new double[baseWidth][baseHeight];
+		double[][] tempArrayB = new double[baseWidth][baseHeight];
+		
+		for(int i=0;i<baseWidth;i++){
+			for(int j=0;j<baseHeight;j++){
+				tempArrayR[i][j] = this.r[i][j];
+				tempArrayG[i][j] = this.g[i][j];
+				tempArrayB[i][j] = this.b[i][j];
+			}
+		}
+		if(baseWidth > baseHeight) padding = baseWidth;
+		else if (baseHeight > baseWidth) padding = baseHeight;
+		else padding = baseWidth; // Doesn't matter in this scenario, since both are equal.
+		
+		//Now we introduce the powerIndex, also known as the current power of two.
 		int powerIndex = 1;
-		//While the index is lesser than the number we're dealing with AND lower than 2^23 (because come on I make pics that big sometimes).
-		while(powerIndex <(this.img.getWidth()*this.img.getHeight()) && powerIndex < 8388608){
-			powerIndex *= 2;
-			//Debug:
-			System.out.println("Current WidthXHeight: "+ (this.img.getWidth()*this.img.getHeight()));
-			System.out.println("Current power of 2: "+ powerIndex);
+		//First, by width.
+		while(powerIndex < padding && powerIndex < 8388608){
+			powerIndex *=2;
+		}
+		//Resize the array.
+		this.r = new double[powerIndex][powerIndex];
+		this.g = new double[powerIndex][powerIndex];
+		this.b = new double[powerIndex][powerIndex];
+		for(int i=0; i<powerIndex; i++){
+			for(int j=0; j<powerIndex;j++){
+				//If you go over the base values, instead input zeroes.
+				if(i>=baseWidth || j>=baseHeight){
+					this.r[i][j] = 0;
+					this.g[i][j] = 0;
+					this.b[i][j] = 0;
+				}
+				else{
+					this.r[i][j] = tempArrayR[i][j];
+					this.g[i][j] = tempArrayG[i][j];
+					this.b[i][j] = tempArrayB[i][j];
+				}
+			}
 		}
 		
-		//Pad it.
-		this.r = Arrays.copyOf(r, powerIndex);
-		this.g = Arrays.copyOf(g, powerIndex);
-		this.b = Arrays.copyOf(b, powerIndex);
-		*/
+		this.newHeight = powerIndex;
+		this.newWidth = powerIndex;
+		//Our table is now padded and should work for the FFT transform.
 	}
 	
 	//Updates the separate tables (the ones that split Real and Acid Trips for purposes of display and clarity).
 	//This is invoked a lot. A LOT.
 	private void updateSeparates(){
-	/*
-		//(Fun fact - all lengths are the same, I just put them differently for flavour purposes.)
-		rRe = new double[rCom.length];
-		rIm = new double[rCom.length];
-		gRe = new double[gCom.length];
-		gIm = new double[gCom.length];
-		bRe = new double[bCom.length];
-		bIm = new double[bCom.length];
-		//And fill them.
-		for(int i=0; i<rCom.length; i++){
-			rRe[i] = rCom[i].getReal();
-			rIm[i] = rCom[i].getImaginary();
-			//Debug for red:
-			//System.out.println("Real Red["+i+"]: "+rRe[i]);
-			//System.out.println("Imaginary Red["+i+"]: "+rIm[i]);
-			
-			gRe[i] = gCom[i].getReal();
-			gIm[i] = gCom[i].getImaginary();
-			
-			bRe[i] = bCom[i].getReal();
-			bIm[i] = bCom[i].getImaginary();
+		this.rRe = new double[newWidth][newHeight];
+		this.rIm = new double[newWidth][newHeight];
+		this.gRe = new double[newWidth][newHeight];
+		this.gIm = new double[newWidth][newHeight];
+		this.bRe = new double[newWidth][newHeight];
+		this.bIm = new double[newWidth][newHeight];
+		
+		for (int i=0; i<newWidth; i++){
+			for(int j=0; j<newHeight; j++){
+				this.rRe[i][j] = this.rCom[i][j].getReal();
+				this.rIm[i][j] = this.rCom[i][j].getImaginary();
+				this.gRe[i][j] = this.gCom[i][j].getReal();
+				this.gIm[i][j] = this.gCom[i][j].getImaginary();
+				this.bRe[i][j] = this.bCom[i][j].getReal();
+				this.bIm[i][j] = this.bCom[i][j].getImaginary();
+			}
 		}
-	*/
 	}
 	
 	//The main standard FFT function.
 	//Type denotes the necessary type - either FORWARD (simple) or INVERSE.
-	public void standardFFT(TransformType type){
-		/*
-		//First thing's first - we need to pad stuff out.
+	public void standardFFT(){
+		//First step - pad out the tables so that they can work. We can also initialize our result tables with proper values.
 		pad();
-		//Now, we transform using the fft and its type. We get a single array of complex numbers aka EVIL.
-		this.rCom = fft.transform(this.r, type);
-		this.gCom = fft.transform(this.g, type);
-		this.bCom = fft.transform(this.b, type);
-		//Finally, we separate the reals from acid trips (imaginaries) and paste them to the right tables.
 		
-		//Initialize them.
+		this.rCom = new Complex[newWidth][newHeight];
+		this.gCom = new Complex[newWidth][newHeight];
+		this.bCom = new Complex[newWidth][newHeight];
+			
+		//2D Fourier Transform is simply a 1D fouriter transform performed twice. Once by width, once by height.
+		//This is going to be a very lengthy algorithm, so even with a simple FFT (the fastest FT out there), it may take a while.
+		
+		//First pass - by columns.
+		//There's as many columns as the WIDTH of the table.
+		for(int clmn = 0; clmn < newWidth; clmn++){
+			//First thing - we create a temporary table that's a single column, then fill it out.
+			double tempSingleR[] = new double[newHeight];
+			double tempSingleG[] = new double[newHeight];
+			double tempSingleB[] = new double[newHeight];
+			for (int i = 0; i<newHeight; i++){
+				//System.out.println("Clmn: "+clmn+" i: "+i);
+				tempSingleR[i] = r[clmn][i];
+				tempSingleG[i] = g[clmn][i];
+				tempSingleB[i] = b[clmn][i];
+			}
+			//Note: we are still in a single pass of the main loop.
+			//We now have three tables, each of them is a single column from each of the spectrums we're Fourier-ing.
+			//Enter three supplementary Complex tables wherein each of the previous tables is Fourier'd.
+			Complex[] rTemp = fft.transform(tempSingleR, TransformType.FORWARD);
+			Complex[] gTemp = fft.transform(tempSingleG, TransformType.FORWARD);
+			Complex[] bTemp = fft.transform(tempSingleB, TransformType.FORWARD);
+			//Now we reverse the previous. We cram each of these tables into its corresponding final table.
+			for (int i = 0; i<tempSingleR.length; i++){
+				rCom[clmn][i] = rTemp[i];
+				gCom[clmn][i] = gTemp[i];
+				bCom[clmn][i] = bTemp[i];
+			}
+		}
+		System.out.println("Finished FFT by columns.");
+		//We have a full rCom table that's been partially transformed. Now we repeat the entire algorithm by rows.
+		//Second pass - by rows.
+		for(int row = 0; row < newHeight; row++){
+			//Notice - we make three temporary rows as before, but since we've already passed the Fourier, they're COMPLEX now!
+			Complex[] tempSingleR = new Complex[newWidth];
+			Complex[] tempSingleG = new Complex[newWidth];
+			Complex[] tempSingleB = new Complex[newWidth];
+			for (int i=0; i<newWidth; i++){
+				tempSingleR[i] = rCom[i][row];
+				tempSingleG[i] = gCom[i][row];
+				tempSingleB[i] = bCom[i][row];
+			}
+			//And since they're complex, we can 'abuse' them for this task.
+			tempSingleR = fft.transform(tempSingleR, TransformType.FORWARD);
+			tempSingleG = fft.transform(tempSingleG, TransformType.FORWARD);
+			tempSingleB = fft.transform(tempSingleB, TransformType.FORWARD);
+			//Finally, we cram them in once more.
+			for(int i =0; i<tempSingleR.length; i++){
+				rCom[i][row] = tempSingleR[i];
+				gCom[i][row] = tempSingleG[i];
+				bCom[i][row] = tempSingleB[i];
+			}
+		}
+		System.out.println("Finished FFT by rows, finished FFT entirely then.");
+		
+		//With this done we split the real and imaginary parts for easier viewing.
 		updateSeparates();
 		//TO-DO Paula: Wyœwietlane widma mocy (rgbRe) i czêstotliwoœci (rgbIm) dla obrazu.
-		 */
-		
 	}
 	
 	
