@@ -157,9 +157,8 @@ public class FourierTransformation extends ImageReading {
 		}
 	}
 	
-	//The main standard FFT function.
-	//Type denotes the necessary type - either FORWARD (simple) or INVERSE.
-	public void standardFFT(){
+	//The main forward/simple/standard. FFT function.
+	public void FFTstandard(){
 		//First step - pad out the tables so that they can work. We can also initialize our result tables with proper values.
 		pad();
 		
@@ -220,11 +219,61 @@ public class FourierTransformation extends ImageReading {
 				bCom[i][row] = tempSingleB[i];
 			}
 		}
-		System.out.println("Finished FFT by rows, finished FFT entirely then.");
+		System.out.println("Finished FFT by rows. Finished FFT.");
 		
 		//With this done we split the real and imaginary parts for easier viewing.
 		updateSeparates();
 		//TO-DO Paula: Wyœwietlane widma mocy (rgbRe) i czêstotliwoœci (rgbIm) dla obrazu.
+	}
+	
+	//The main inverse FFT function.
+	//Warning - using this function overwrites the rgbCom tables with inverted FFT. In essence this means imaginaries are gone and reals
+	// SHOULD be our image. We can't do FFT algos until we revert the image through a forward FFT once again.
+	public void FFTinverse(){
+		//The entire algorithm works just like its forward cousin, instead operating solely on Complex[]es.
+		
+		//Step one - inverse FFT by columns.
+		for(int clmn = 0; clmn < newWidth; clmn++){
+			Complex[] tempSingleR = new Complex[newHeight];
+			Complex[] tempSingleG = new Complex[newHeight];
+			Complex[] tempSingleB = new Complex[newHeight];
+			for (int i=0; i<newHeight; i++){
+				tempSingleR[i] = rCom[clmn][i];
+				tempSingleG[i] = gCom[clmn][i];
+				tempSingleB[i] = bCom[clmn][i];
+			}
+			tempSingleR = fft.transform(tempSingleR, TransformType.INVERSE);
+			tempSingleG = fft.transform(tempSingleG, TransformType.INVERSE);
+			tempSingleB = fft.transform(tempSingleB, TransformType.INVERSE);
+			for (int i=0; i<newHeight; i++){
+				rCom[clmn][i] = tempSingleR[i];
+				gCom[clmn][i] = tempSingleG[i];
+				bCom[clmn][i] = tempSingleB[i];
+			}
+		}
+		System.out.println("Finished inversion-FFT by colmns.");
+		
+		//Step two - inverse by rows.
+		for(int row = 0; row < newHeight; row++){
+			Complex[] tempSingleR = new Complex[newWidth];
+			Complex[] tempSingleG = new Complex[newWidth];
+			Complex[] tempSingleB = new Complex[newWidth];
+			for (int i =0; i<newWidth; i++){
+				tempSingleR[i] = rCom[i][row];
+				tempSingleG[i] = gCom[i][row];
+				tempSingleB[i] = bCom[i][row];
+			}
+			tempSingleR = fft.transform(tempSingleR, TransformType.INVERSE);
+			tempSingleG = fft.transform(tempSingleG, TransformType.INVERSE);
+			tempSingleB = fft.transform(tempSingleB, TransformType.INVERSE);
+			for (int i=0; i<newWidth; i++){
+				rCom[i][row] = tempSingleR[i];
+				gCom[i][row] = tempSingleG[i];
+				bCom[i][row] = tempSingleB[i];
+			}
+		}
+		System.out.println("Finsihed inversion-FFT by rows. Finished inverted FFT.");
+		updateSeparates();
 	}
 	
 	
