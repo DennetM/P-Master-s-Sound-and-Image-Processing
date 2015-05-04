@@ -1,0 +1,10 @@
+> Normalizacja Logarytmiczna
+> Odwrócenie æwiartek tablicy rgbCom[]
+> Moc -> d³ugoœæ vectora, Czêst -> K¹t vectora
+
+> Kopiuj tablice.
+> Przemnó¿ wzorem.
+> Na³ó¿ obie.
+> Wynik.
+
+> G1!!!!
