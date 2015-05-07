@@ -34,17 +34,14 @@ public class FourierTransformation extends ImageReading {
 	//Com is the sum-total Complex Number table, which will be our main operating procedure.
 	//Re and Im tables are tables that separate the imaginary and real values of the complex number, for visualization.
 	protected Complex[][] rCom; //red Complex.
-	public double[][] rRe; //red Real.
-	public double[][] rIm; //red Imaginary.
+	public Complex[][] rViz; // alternate for visualization.
 	
 	protected Complex[][] gCom; //green Complex.
-	public double[][] gRe; //green Real.
-	public double[][] gIm; //green Imaginary.
+	public Complex[][] gViz; // alternate for visualization.
 	
 	protected Complex[][] bCom; //blue Complex.
-	public double[][] bRe; //blue Real.
-	public double[][] bIm; //blue Imaginary.
-	
+	public Complex[][] bViz; // alternate for visualization.
+
 	FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD); // Our FFT. Using the Standard formula.
 																					// Again, don't ask. Better left alone.
 	
@@ -138,21 +135,15 @@ public class FourierTransformation extends ImageReading {
 	//Updates the separate tables (the ones that split Real and Acid Trips for purposes of display and clarity).
 	//This is invoked a lot. A LOT.
 	private void updateSeparates(){
-		this.rRe = new double[newWidth][newHeight];
-		this.rIm = new double[newWidth][newHeight];
-		this.gRe = new double[newWidth][newHeight];
-		this.gIm = new double[newWidth][newHeight];
-		this.bRe = new double[newWidth][newHeight];
-		this.bIm = new double[newWidth][newHeight];
+		this.rViz = new Complex[newWidth][newHeight];
+		this.gViz = new Complex[newWidth][newHeight];
+		this.bViz = new Complex[newWidth][newHeight];
 		
 		for (int i=0; i<newWidth; i++){
 			for(int j=0; j<newHeight; j++){
-				this.rRe[i][j] = this.rCom[i][j].getReal();
-				this.rIm[i][j] = this.rCom[i][j].getImaginary();
-				this.gRe[i][j] = this.gCom[i][j].getReal();
-				this.gIm[i][j] = this.gCom[i][j].getImaginary();
-				this.bRe[i][j] = this.bCom[i][j].getReal();
-				this.bIm[i][j] = this.bCom[i][j].getImaginary();
+				this.rViz[i][j] = rCom[i][j];
+				this.gViz[i][j] = rCom[i][j];
+				this.bViz[i][j] = rCom[i][j];
 			}
 		}
 	}
@@ -307,6 +298,23 @@ public class FourierTransformation extends ImageReading {
 					rCom[i-halfHeight][halfHeight+j] = temp[i][j];
 					temp[i][j] = Complex.ZERO;
 				}
+			}
+		}
+		updateSeparates();
+	}
+	
+	//Logarithmic normalization.
+	//A twist on our normalization function, instead logs each value first and then normalizes to fit 0-255 range.
+	public void exec_NORM(){
+		//First, log the entire thing.
+		//While we're loopin
+		for (int i=0; i<newWidth; i++){
+			for (int j=0; j<newHeight; j++){
+				rCom[i][j] = rCom[i][j].log();
+				
+				//Debug:
+				//System.out.println("ValueLog: "+rCom[i][j].getReal()+" i"+rCom[i][j].getImaginary());
+				
 			}
 		}
 	}
