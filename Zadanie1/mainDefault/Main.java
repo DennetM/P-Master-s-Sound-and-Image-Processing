@@ -173,7 +173,8 @@ public class Main {
 	
 
 	fftTrans.FFTstandard();
-	//fftTrans.FFTinverse();
+	fftTrans.exec_FLIP();
+	fftTrans.FFTinverse();
 	
 	HistogramAction histAction = new HistogramAction();
 	histAction.showTheThing(ReadImage);

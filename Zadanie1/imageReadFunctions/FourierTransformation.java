@@ -275,6 +275,42 @@ public class FourierTransformation extends ImageReading {
 		updateSeparates();
 	}
 	
+	//Flip function.
+	//This function takes the rCom and flips it - replaces the quarters 1 with 4 and 2 with 3 to visualize the center-alignment.
+	public void exec_FLIP(){
+		//Helper variables. Half width, half height...
+		int halfWidth = newWidth/2;
+		int halfHeight = newHeight/2;
+		//...and a temporary copy of our table so we get a place to dump stuff into.
+		Complex[][] temp = new Complex[newWidth][newHeight];
+		
+		//Debug:
+		//System.out.println("newWidth / newHeight: "+newWidth+" "+newHeight);
+		//System.out.println("halfwidth: "+halfWidth);
+		//System.out.println("halfheight: "+halfHeight);
+		
+		for(int i=0; i<newWidth; i++){
+			for (int j=0; j<newHeight; j++){
+				//First slice - i<= half and j<=half.
+				//Swap the elements of that slice with the 4th slice.
+				if(i<halfWidth && j<halfHeight){
+					temp[i][j] = rCom[i][j];
+					rCom[i][j] = rCom[halfWidth+i][halfHeight+j];
+					rCom[halfWidth+i][halfHeight+j] = temp[i][j];
+					temp[i][j] = Complex.ZERO; //Purge it just to be sure.
+				}
+				//Second slice - i>half and j<=half.
+				//Swap these with the 3rd slice - i<=half and j>half.
+				if(i>halfWidth && j<halfHeight){
+					temp[i][j] = rCom[i][j];
+					rCom[i][j] = rCom[i-halfWidth][j+halfHeight];
+					rCom[i-halfHeight][halfHeight+j] = temp[i][j];
+					temp[i][j] = Complex.ZERO;
+				}
+			}
+		}
+	}
+	
 	//Visualization function (DEBUGMODE)
 	//Turns the Magnitude (real) spectrum into an image that can be displayed.
 	public void visualize(){
