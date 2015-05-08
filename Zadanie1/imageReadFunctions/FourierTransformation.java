@@ -319,6 +319,85 @@ public class FourierTransformation extends ImageReading {
 	//Logarithmic normalization.
 	//A twist on our normalization function, instead logs each value first and then normalizes to fit 0-255 range.
 	private void exec_NORM(){
+		//First, min and max values for all three colours and all two variables.
+		double rPowMax = rVizPow[0][0];
+		double rFrqMax = rVizFrq[0][0];
+		double rPowMin = rVizPow[0][0];
+		double rFrqMin = rVizFrq[0][0];
+		
+		double gPowMax = gVizPow[0][0];
+		double gFrqMax = gVizFrq[0][0];
+		double gPowMin = gVizPow[0][0];
+		double gFrqMin = gVizFrq[0][0];
+
+		double bPowMax = bVizPow[0][0];
+		double bFrqMax = bVizFrq[0][0];
+		double bPowMin = bVizPow[0][0];
+		double bFrqMin = bVizFrq[0][0];
+		
+		//First loop - gather maximums and minimums of the log'd values.
+		for(int i=0; i<newWidth; i++){
+			for(int j=0; j<newHeight; j++){
+				// Note: With this, we get very low values stretched from -inf to about 2.
+				// Which is ironic since we're supposed to do a logarithmic normalization, except making it as such is
+				// more problematic than just doing this the standard way.
+				//this.rVizPow[i][j] = Math.log(this.rVizPow[i][j]);
+				//this.rVizFrq[i][j] = Math.log(this.rVizFrq[i][j]);
+				//this.gVizPow[i][j] = Math.log(this.gVizPow[i][j]);
+				//this.gVizFrq[i][j] = Math.log(this.gVizFrq[i][j]);
+				//this.bVizPow[i][j] = Math.log(this.bVizPow[i][j]);
+				//this.bVizFrq[i][j] = Math.log(this.bVizFrq[i][j]);
+				
+				//Reds:
+				if(this.rVizPow[i][j] > rPowMax) rPowMax = this.rVizPow[i][j];
+				if(this.rVizFrq[i][j] > rFrqMax) rFrqMax = this.rVizFrq[i][j];
+				if(this.rVizPow[i][j] <= rPowMin) rPowMin = this.rVizPow[i][j];
+				if(this.rVizFrq[i][j] <= rFrqMin) rFrqMin = this.rVizFrq[i][j];
+				
+				//Greens:
+				if(this.gVizPow[i][j] > gPowMax) gPowMax = this.gVizPow[i][j];
+				if(this.gVizFrq[i][j] > gFrqMax) gFrqMax = this.gVizFrq[i][j];
+				if(this.gVizPow[i][j] <= gPowMin) gPowMin = this.gVizPow[i][j];
+				if(this.gVizFrq[i][j] <= gFrqMin) gFrqMin = this.gVizFrq[i][j];
+				
+				//Blues:
+				if(this.bVizPow[i][j] > bPowMax) bPowMax = this.bVizPow[i][j];
+				if(this.bVizFrq[i][j] > bFrqMax) bFrqMax = this.bVizFrq[i][j];
+				if(this.bVizPow[i][j] <= bPowMin) bPowMin = this.bVizPow[i][j];
+				if(this.bVizFrq[i][j] <= bFrqMin) bFrqMin = this.bVizFrq[i][j];
+			}
+		}
+		//Debug:
+		System.out.println("Power Values:");
+		System.out.println("rPowMax: "+rPowMax);
+		System.out.println("rPowMin: "+rPowMin);
+		System.out.println("rFrqMax: "+rFrqMax);
+		System.out.println("rFrqMin: "+rFrqMin);
+
+		System.out.println("gPowMax: "+rPowMax);
+		System.out.println("gPowMin: "+rPowMin);
+		System.out.println("gFrqMax: "+rFrqMax);
+		System.out.println("gFrqMin: "+rFrqMin);
+		
+		System.out.println("bPowMax: "+rPowMax);
+		System.out.println("bPowMin: "+rPowMin);
+		System.out.println("bFrqMax: "+rFrqMax);
+		System.out.println("bFrqMin: "+rFrqMin);
+		
+		//Second pass: Each value is shifted according to a simple formula.
+		for (int i=0; i<newWidth; i++){
+			for(int j=0; j<newHeight; j++){
+				this.rVizPow[i][j] = 255 * (this.rVizPow[i][j] - rPowMin) / (rPowMax - rPowMin);
+				this.rVizFrq[i][j] = 255 * (this.rVizFrq[i][j] - rFrqMin) / (rFrqMax - rFrqMin);
+				
+				this.gVizPow[i][j] = 255 * (this.gVizPow[i][j] - gPowMin) / (gPowMax - gPowMin);
+				this.gVizFrq[i][j] = 255 * (this.gVizFrq[i][j] - gFrqMin) / (gFrqMax - gFrqMin);
+				
+				this.bVizPow[i][j] = 255 * (this.bVizPow[i][j] - bPowMin) / (bPowMax - bPowMin);
+				this.bVizFrq[i][j] = 255 * (this.bVizFrq[i][j] - bFrqMin) / (bFrqMax - bFrqMin);
+			}
+		}
+		
 	}
 	
 	//Visualization function (DEBUGMODE)
