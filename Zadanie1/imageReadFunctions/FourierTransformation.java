@@ -32,15 +32,19 @@ public class FourierTransformation extends ImageReading {
 	
 	//2D tables that represent the specific channels after being passed through a 2D FFT.
 	//Com is the sum-total Complex Number table, which will be our main operating procedure.
-	//Re and Im tables are tables that separate the imaginary and real values of the complex number, for visualization.
+	//Two double tables are in order: Amplitude (Power) and Phase (Frequency) of the image. They're the ones we push to visualize.
+	//NOTE: THEY JUST REPRESENT THE FOURIER. ACTUAL FOURIER MATH IS DONE ON rCOM AND NOT ELSEWHERE.
 	protected Complex[][] rCom; //red Complex.
-	public Complex[][] rViz; // alternate for visualization.
+	public double[][] rVizPow; // Red Power. (dassoracist)
+	public double[][] rVizFrq; // Red Frequency.
 	
 	protected Complex[][] gCom; //green Complex.
-	public Complex[][] gViz; // alternate for visualization.
+	public double[][] gVizPow; // Green Power.
+	public double[][] gVizFrq; // Green Frequency.
 	
 	protected Complex[][] bCom; //blue Complex.
-	public Complex[][] bViz; // alternate for visualization.
+	public double[][] bVizPow; // Blue power.
+	public double[][] bVizFrq; // Blue frequency.
 
 	FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD); // Our FFT. Using the Standard formula.
 																					// Again, don't ask. Better left alone.
@@ -132,18 +136,31 @@ public class FourierTransformation extends ImageReading {
 		//Our table is now padded and should work for the FFT transform.
 	}
 	
-	//Updates the separate tables (the ones that split Real and Acid Trips for purposes of display and clarity).
-	//This is invoked a lot. A LOT.
+	//Updates the separate tables - powers and frequencies.
+	//This is invoked each time we want to push a visualization of our spectrums unto the screen.
+	//Essentially just calculates the abs() (power) and argument (freq) from the Complex table.
 	private void updateSeparates(){
-		this.rViz = new Complex[newWidth][newHeight];
-		this.gViz = new Complex[newWidth][newHeight];
-		this.bViz = new Complex[newWidth][newHeight];
+		this.rVizPow = new double [newWidth][newHeight];
+		this.rVizFrq = new double [newWidth][newHeight];
 		
+		this.gVizPow = new double [newWidth][newHeight];
+		this.gVizFrq = new double [newWidth][newHeight];
+		
+		this.bVizPow = new double [newWidth][newHeight];
+		this.bVizFrq = new double [newWidth][newHeight];
+		
+		//Now iterate the table and count the stuff.
 		for (int i=0; i<newWidth; i++){
 			for(int j=0; j<newHeight; j++){
-				this.rViz[i][j] = rCom[i][j];
-				this.gViz[i][j] = rCom[i][j];
-				this.bViz[i][j] = rCom[i][j];
+				//Power:
+				this.rVizPow[i][j] = rCom[i][j].abs();
+				this.gVizPow[i][j] = gCom[i][j].abs();
+				this.bVizPow[i][j] = bCom[i][j].abs();
+				
+				//Freq:
+				this.rVizFrq[i][j] = rCom[i][j].getArgument();
+				this.gVizFrq[i][j] = gCom[i][j].getArgument();
+				this.bVizFrq[i][j] = bCom[i][j].getArgument();
 			}
 		}
 	}
@@ -211,9 +228,6 @@ public class FourierTransformation extends ImageReading {
 			}
 		}
 		System.out.println("Finished FFT by rows. Finished FFT.");
-		
-		//With this done we split the real and imaginary parts for easier viewing.
-		updateSeparates();
 	}
 	
 	//The main inverse FFT function.
@@ -263,7 +277,6 @@ public class FourierTransformation extends ImageReading {
 			}
 		}
 		System.out.println("Finsihed inversion-FFT by rows. Finished inverted FFT.");
-		updateSeparates();
 	}
 	
 	//Flip function.
@@ -305,30 +318,31 @@ public class FourierTransformation extends ImageReading {
 	
 	//Logarithmic normalization.
 	//A twist on our normalization function, instead logs each value first and then normalizes to fit 0-255 range.
-	public void exec_NORM(){
-		//First, log the entire thing.
-		//While we're loopin
-		for (int i=0; i<newWidth; i++){
-			for (int j=0; j<newHeight; j++){
-				rCom[i][j] = rCom[i][j].log();
-				
-				//Debug:
-				//System.out.println("ValueLog: "+rCom[i][j].getReal()+" i"+rCom[i][j].getImaginary());
-				
-			}
-		}
+	private void exec_NORM(){
 	}
 	
 	//Visualization function (DEBUGMODE)
 	//Turns the Magnitude (real) spectrum into an image that can be displayed.
 	public void visualize(){
 		super.initializeAltImage();
+		exec_NORM();
+		
 		for(int i = 0; i<newWidth; i++){
 			for(int j=0; j<newHeight;j++){
 				int r, g, b;
+				/*
 				r = (int) rCom[i][j].getReal();
 				g = (int) rCom[i][j].getReal();
 				b = (int) rCom[i][j].getReal();
+				
+				r = super.safetyCheck(r);
+				g = super.safetyCheck(g);
+				b = super.safetyCheck(b);
+				*/
+				
+				r = (int) rVizPow[i][j];
+				g = (int) rVizPow[i][j];
+				b = (int) rVizPow[i][j];
 				
 				r = super.safetyCheck(r);
 				g = super.safetyCheck(g);
