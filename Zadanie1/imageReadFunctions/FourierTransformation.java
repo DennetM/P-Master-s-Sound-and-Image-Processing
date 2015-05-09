@@ -431,17 +431,26 @@ public class FourierTransformation extends ImageReading {
 	// will 'suffer' from banding on the end image. On the OTHER hand, making non-perfect filters removes that effect, but we need to
 	// fiddle with fuzzy/gradiented circles. These algos work on perfect filters, so take note.
 	
+	//A quickie function that calculates the range of a point from point half-and-half.
+	private double calcRange(double x, double y){
+		double mW = newWidth/2;
+		double mH = newHeight/2;
+		
+		return Math.sqrt((mW-x)*(mW-x)+(mH-y)*(mH-y));
+	}
+	
 	//High Pass, meaning everything higher than the limit / circle range gets a pass. Everything below is turned into the power of the Void.
 	public void filterHighpass(double limit){
 		//Run the table.
-		
 		for (int i=0; i<newWidth; i++){
 			for (int j=0; j<newHeight; j++){
 				//Check if the absolute value of the number is lower than the cutoff.
 				// If so, zero the value.
-				if (rCom[i][j].abs() < limit) rCom[i][j] = Complex.ZERO;
-				if (gCom[i][j].abs() < limit) gCom[i][j] = Complex.ZERO;
-				if (bCom[i][j].abs() < limit) bCom[i][j] = Complex.ZERO;
+				if (calcRange(i,j) < limit){
+					rCom[i][j] = Complex.ZERO;
+					gCom[i][j] = Complex.ZERO;
+					bCom[i][j] = Complex.ZERO;
+				}
 			}
 		}
 		//Done? Update the visualized values.
@@ -454,9 +463,11 @@ public class FourierTransformation extends ImageReading {
 			for (int j=0; j<newHeight; j++){
 				//Check if the absolute value of the number is lower than the cutoff.
 				// If so, zero the value.
-				if (rCom[i][j].abs() > limit) rCom[i][j] = Complex.ZERO;
-				if (gCom[i][j].abs() > limit) gCom[i][j] = Complex.ZERO;
-				if (bCom[i][j].abs() > limit) bCom[i][j] = Complex.ZERO;
+				if (calcRange(i,j) > limit){
+					rCom[i][j] = Complex.ZERO;
+					gCom[i][j] = Complex.ZERO;
+					bCom[i][j] = Complex.ZERO;
+				}
 			}
 		}
 		//Done? Update the visualized values.
@@ -469,9 +480,11 @@ public class FourierTransformation extends ImageReading {
 		for (int i=0; i<newWidth; i++){
 			for (int j=0; j<newHeight; j++){
 				//Check if the REAL value is higher than borderofLife, and lower than borderofDeath (haha Perfect Cherry Blossom reference)
-				if (rCom[i][j].abs() < borderofLife && rCom[i][j].abs() > borderofLife) rCom[i][j] = Complex.ZERO;
-				if (gCom[i][j].abs() < borderofLife && gCom[i][j].abs() > borderofLife) gCom[i][j] = Complex.ZERO;
-				if (bCom[i][j].abs() < borderofLife && bCom[i][j].abs() > borderofLife) bCom[i][j] = Complex.ZERO;
+				if (calcRange(i,j) < borderofLife && calcRange(i,j) > borderofDeath){
+					rCom[i][j] = Complex.ZERO;
+					gCom[i][j] = Complex.ZERO;
+					bCom[i][j] = Complex.ZERO;
+				}
 			}
 		}
 		updateSeparates();
@@ -481,12 +494,18 @@ public class FourierTransformation extends ImageReading {
 	public void filterBandblock(double borderofLife, double borderofDeath){
 		for (int i=0; i<newWidth; i++){
 			for (int j=0; j<newHeight; j++){
-				//Check if the REAL value is higher than borderofLife, and lower than borderofDeath (haha Perfect Cherry Blossom reference)
-				if (rCom[i][j].abs() > borderofLife && rCom[i][j].abs() < borderofLife) rCom[i][j] = Complex.ZERO;
-				if (gCom[i][j].abs() > borderofLife && gCom[i][j].abs() < borderofLife) gCom[i][j] = Complex.ZERO;
-				if (bCom[i][j].abs() > borderofLife && bCom[i][j].abs() < borderofLife) bCom[i][j] = Complex.ZERO;
+				if (calcRange(i,j) > borderofLife && calcRange(i,j) < borderofDeath){
+					rCom[i][j] = Complex.ZERO;
+					gCom[i][j] = Complex.ZERO;
+					bCom[i][j] = Complex.ZERO;
+				}
 			}
 		}
 		updateSeparates();
+	}
+	
+	//The edge-detect filter.
+	public void filterEdge(){
+		
 	}
 }
