@@ -302,6 +302,16 @@ public class FourierTransformation extends ImageReading {
 					rCom[i][j] = rCom[halfWidth+i][halfHeight+j];
 					rCom[halfWidth+i][halfHeight+j] = temp[i][j];
 					temp[i][j] = Complex.ZERO; //Purge it just to be sure.
+					
+					temp[i][j] = gCom[i][j];
+					gCom[i][j] = gCom[halfWidth+i][halfHeight+j];
+					gCom[halfWidth+i][halfHeight+j] = temp[i][j];
+					temp[i][j] = Complex.ZERO; //Purge it just to be sure.
+					
+					temp[i][j] = bCom[i][j];
+					bCom[i][j] = bCom[halfWidth+i][halfHeight+j];
+					bCom[halfWidth+i][halfHeight+j] = temp[i][j];
+					temp[i][j] = Complex.ZERO; //Purge it just to be sure.
 				}
 				//Second slice - i>half and j<=half.
 				//Swap these with the 3rd slice - i<=half and j>half.
@@ -309,6 +319,16 @@ public class FourierTransformation extends ImageReading {
 					temp[i][j] = rCom[i][j];
 					rCom[i][j] = rCom[i-halfWidth][j+halfHeight];
 					rCom[i-halfHeight][halfHeight+j] = temp[i][j];
+					temp[i][j] = Complex.ZERO;
+					
+					temp[i][j] = gCom[i][j];
+					gCom[i][j] = gCom[i-halfWidth][j+halfHeight];
+					gCom[i-halfHeight][halfHeight+j] = temp[i][j];
+					temp[i][j] = Complex.ZERO;
+					
+					temp[i][j] = bCom[i][j];
+					bCom[i][j] = bCom[i-halfWidth][j+halfHeight];
+					bCom[i-halfHeight][halfHeight+j] = temp[i][j];
 					temp[i][j] = Complex.ZERO;
 				}
 			}
@@ -349,15 +369,15 @@ public class FourierTransformation extends ImageReading {
 			}
 		}
 		//Debug:
-		System.out.println("Power Values:");
-		System.out.println("rPowMax: "+rPowMax);
-		System.out.println("rFrqMax: "+rFrqMax);
+		//System.out.println("Power Values:");
+		//System.out.println("rPowMax: "+rPowMax);
+		//System.out.println("rFrqMax: "+rFrqMax);
 
-		System.out.println("gPowMax: "+rPowMax);
-		System.out.println("gFrqMax: "+rFrqMax);
+		//System.out.println("gPowMax: "+rPowMax);
+		//System.out.println("gFrqMax: "+rFrqMax);
 		
-		System.out.println("bPowMax: "+rPowMax);
-		System.out.println("bFrqMax: "+rFrqMax);
+		//System.out.println("bPowMax: "+rPowMax);
+		//System.out.println("bFrqMax: "+rFrqMax);
 		
 		// Constant values used for the normalization formula (refer to article above):
 		double rCP = 255 / Math.log(1 + Math.abs(rPowMax));
@@ -388,32 +408,34 @@ public class FourierTransformation extends ImageReading {
 	
 	//Visualization function (DEBUGMODE)
 	//Turns the Magnitude (real) spectrum into an image that can be displayed.
-	public void visualize(){
+	public void visualize(String mode){
 		super.initializeAltImage();
 		exec_NORM();
 		
 		for(int i = 0; i<newWidth; i++){
 			for(int j=0; j<newHeight;j++){
-				int r, g, b;
+				int r = 0; int g = 0; int b = 0;
 				
-				r = (int) rCom[i][j].getReal();
-				g = (int) gCom[i][j].getReal();
-				b = (int) bCom[i][j].getReal();
+				if(mode.equals("REAL")){
+					r = (int) rCom[i][j].getReal();
+					g = (int) gCom[i][j].getReal();
+					b = (int) bCom[i][j].getReal();
+					
+					r = super.safetyCheck(r);
+					g = super.safetyCheck(g);
+					b = super.safetyCheck(b);
+				}
 				
-				r = super.safetyCheck(r);
-				g = super.safetyCheck(g);
-				b = super.safetyCheck(b);
 				
-				
-				/*
-				r = (int) rVizPow[i][j];
-				g = (int) gVizPow[i][j];
-				b = (int) bVizPow[i][j];
-				
-				r = super.safetyCheck(r);
-				g = super.safetyCheck(g);
-				b = super.safetyCheck(b);
-				*/
+				if(mode.equals("FOUR")){
+					r = (int) rVizPow[i][j];
+					g = (int) gVizPow[i][j];
+					b = (int) bVizPow[i][j];
+					
+					//r = super.safetyCheck(r);
+					//g = super.safetyCheck(g);
+					//b = super.safetyCheck(b);
+				}
 				
 				Color col = new Color(r,g,b);
 				super.altimg.setRGB(i,j,col.getRGB());
@@ -447,9 +469,9 @@ public class FourierTransformation extends ImageReading {
 				//Check if the absolute value of the number is lower than the cutoff.
 				// If so, zero the value.
 				if (calcRange(i,j) < limit){
-					rCom[i][j] = Complex.ZERO;
-					gCom[i][j] = Complex.ZERO;
-					bCom[i][j] = Complex.ZERO;
+					this.rCom[i][j] = Complex.ZERO;
+					this.gCom[i][j] = Complex.ZERO;
+					this.bCom[i][j] = Complex.ZERO;
 				}
 			}
 		}

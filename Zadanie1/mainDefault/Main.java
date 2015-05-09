@@ -174,8 +174,8 @@ public class Main {
 
 	fftTrans.FFTstandard();
 	fftTrans.exec_FLIP();
-	fftTrans.filterHighpass(256);
-	//fftTrans.exec_FLIP();
+	fftTrans.filterBandblock(4,10);
+	fftTrans.exec_FLIP();
 	fftTrans.FFTinverse();
 	
 	HistogramAction histAction = new HistogramAction();
@@ -199,7 +199,8 @@ public class Main {
 	//ReadImage.calcPSNR();
 	//ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 	
-	fftTrans.visualize();
+	fftTrans.visualize("REAL");
+	//fftTrans.visualize("FOUR");
 	ImageDisplay AlterImage = new ImageDisplay(fftTrans, true);
 	
 	
