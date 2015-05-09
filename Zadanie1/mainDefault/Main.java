@@ -174,7 +174,7 @@ public class Main {
 
 	fftTrans.FFTstandard();
 	fftTrans.exec_FLIP();
-	fftTrans.filterBandblock(4,10);
+	fftTrans.filterBandblock(12,120);
 	fftTrans.exec_FLIP();
 	fftTrans.FFTinverse();
 	

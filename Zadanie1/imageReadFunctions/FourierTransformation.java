@@ -502,7 +502,7 @@ public class FourierTransformation extends ImageReading {
 		for (int i=0; i<newWidth; i++){
 			for (int j=0; j<newHeight; j++){
 				//Check if the REAL value is higher than borderofLife, and lower than borderofDeath (haha Perfect Cherry Blossom reference)
-				if (calcRange(i,j) < borderofLife && calcRange(i,j) > borderofDeath){
+				if (calcRange(i,j) < borderofLife || calcRange(i,j) > borderofDeath){
 					rCom[i][j] = Complex.ZERO;
 					gCom[i][j] = Complex.ZERO;
 					bCom[i][j] = Complex.ZERO;
@@ -532,14 +532,14 @@ public class FourierTransformation extends ImageReading {
 		for (int i=0; i<newWidth; i++){
 			for (int j=0; j<newHeight; j++){
 				//2nd slice.
-				if(i > newWidth && j<newHeight){
+				if(i > newWidth/2 && j<newHeight/2){
 					if (calcRange(i,j) > borderofLife && calcRange(i,j) < borderofDeath){
 						rCom[i][j] = Complex.ZERO;
 						gCom[i][j] = Complex.ZERO;
 						bCom[i][j] = Complex.ZERO;
 					}
 				}
-				if (i < newWidth && j> newHeight){
+				if (i < newWidth/2 && j> newHeight/2){
 					if (calcRange(i,j) > borderofLife && calcRange(i,j) < borderofDeath){
 						rCom[i][j] = Complex.ZERO;
 						gCom[i][j] = Complex.ZERO;
