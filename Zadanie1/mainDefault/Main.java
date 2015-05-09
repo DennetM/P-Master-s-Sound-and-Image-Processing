@@ -174,7 +174,9 @@ public class Main {
 
 	fftTrans.FFTstandard();
 	fftTrans.exec_FLIP();
-	//fftTrans.FFTinverse();
+	fftTrans.filterHighpass(10000);
+	fftTrans.exec_FLIP();
+	fftTrans.FFTinverse();
 	
 	HistogramAction histAction = new HistogramAction();
 	histAction.showTheThing(ReadImage);

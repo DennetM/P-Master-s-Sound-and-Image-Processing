@@ -395,16 +395,17 @@ public class FourierTransformation extends ImageReading {
 		for(int i = 0; i<newWidth; i++){
 			for(int j=0; j<newHeight;j++){
 				int r, g, b;
-				/*
+				
 				r = (int) rCom[i][j].getReal();
-				g = (int) rCom[i][j].getReal();
-				b = (int) rCom[i][j].getReal();
+				g = (int) gCom[i][j].getReal();
+				b = (int) bCom[i][j].getReal();
 				
 				r = super.safetyCheck(r);
 				g = super.safetyCheck(g);
 				b = super.safetyCheck(b);
-				*/
 				
+				
+				/*
 				r = (int) rVizPow[i][j];
 				g = (int) gVizPow[i][j];
 				b = (int) bVizPow[i][j];
@@ -412,6 +413,7 @@ public class FourierTransformation extends ImageReading {
 				r = super.safetyCheck(r);
 				g = super.safetyCheck(g);
 				b = super.safetyCheck(b);
+				*/
 				
 				Color col = new Color(r,g,b);
 				super.altimg.setRGB(i,j,col.getRGB());
@@ -423,63 +425,68 @@ public class FourierTransformation extends ImageReading {
 	//Filter functions.
 	//IMPORTANT : DO NOT INVOKE UNLESS STANDARD FFT HAS BEEN INVOKED, OTHERWISE YOU'RE IN DEEP SHIT, BROSKI.
 	
-	//The ur-highpass. Everything below the limit is PURGED.
+	//How (perfect) filtering works: essentially, we make a circle in the center of the frequency domain (aka the fourier transformed image).
+	// Then, we either purge everything inside or outside the circle. Sometimes we make a band and purge stuff in and out of it.
+	// It's important to note those are PERFECT filters. It means the circle/band is sharp, strict 0s and 1s. If we do that, the result
+	// will 'suffer' from banding on the end image. On the OTHER hand, making non-perfect filters removes that effect, but we need to
+	// fiddle with fuzzy/gradiented circles. These algos work on perfect filters, so take note.
+	
+	//High Pass, meaning everything higher than the limit / circle range gets a pass. Everything below is turned into the power of the Void.
 	public void filterHighpass(double limit){
-		/*
-		//Travel through the entire complex array.
-				for (int i=0; i<rCom.length; i++){
-					//Check if the REAL value is higher than borderofLife, and lower than borderofDeath (haha Perfect Cherry Blossom reference)
-					if(rCom[i].getReal() <= limit){
-						rCom[i] = Complex.ZERO; // Zerofiy it with a complex number.
-					}
-					if(gCom[i].getReal() <= limit){
-						gCom[i] = Complex.ZERO; // Zerofiy it with a complex number.
-					}
-					if(bCom[i].getReal() <= limit){
-						bCom[i] = Complex.ZERO; // Zerofiy it with a complex number.
-					}
-				}
+		//Run the table.
+		
+		for (int i=0; i<newWidth; i++){
+			for (int j=0; j<newHeight; j++){
+				//Check if the absolute value of the number is lower than the cutoff.
+				// If so, zero the value.
+				if (rCom[i][j].abs() < limit) rCom[i][j] = Complex.ZERO;
+				if (gCom[i][j].abs() < limit) gCom[i][j] = Complex.ZERO;
+				if (bCom[i][j].abs() < limit) bCom[i][j] = Complex.ZERO;
+			}
+		}
+		//Done? Update the visualized values.
 		updateSeparates();
-		*/
 	}
 	
 	//The ur-lowpass. Ditto, just for above.
 	public void filterLowpass(double limit){
-		/*
-		//Travel through the entire complex array.
-		for (int i=0; i<rCom.length; i++){
-			//Check if the REAL value is higher than borderofLife, and lower than borderofDeath (haha Perfect Cherry Blossom reference)
-			if(rCom[i].getReal() >= limit){
-				rCom[i] = Complex.ZERO; // Zerofiy it with a complex number.
-			}
-			if(gCom[i].getReal() >= limit){
-				gCom[i] = Complex.ZERO; // Zerofiy it with a complex number.
-			}
-			if(bCom[i].getReal() >= limit){
-				bCom[i] = Complex.ZERO; // Zerofiy it with a complex number.
+		for (int i=0; i<newWidth; i++){
+			for (int j=0; j<newHeight; j++){
+				//Check if the absolute value of the number is lower than the cutoff.
+				// If so, zero the value.
+				if (rCom[i][j].abs() > limit) rCom[i][j] = Complex.ZERO;
+				if (gCom[i][j].abs() > limit) gCom[i][j] = Complex.ZERO;
+				if (bCom[i][j].abs() > limit) bCom[i][j] = Complex.ZERO;
 			}
 		}
+		//Done? Update the visualized values.
 		updateSeparates();
-		*/
 	}	
 	
 	//The ur-bandpass filter. The user selects the lower border and the upper border and we purge (zero-ify) everything not between them.
 	public void filterBandpass(double borderofLife, double borderofDeath){
-		/*
 		//Travel through the entire complex array.
-		for (int i=0; i<rCom.length; i++){
-			//Check if the REAL value is higher than borderofLife, and lower than borderofDeath (haha Perfect Cherry Blossom reference)
-			if(rCom[i].getReal() <= borderofLife && rCom[i].getReal() >= borderofDeath){
-				rCom[i] = Complex.ZERO; // Zerofiy it with a complex number.
-			}
-			if(gCom[i].getReal() <= borderofLife && gCom[i].getReal() >= borderofDeath){
-				gCom[i] = Complex.ZERO; // Zerofiy it with a complex number.
-			}
-			if(bCom[i].getReal() <= borderofLife && bCom[i].getReal() >= borderofDeath){
-				bCom[i] = Complex.ZERO; // Zerofiy it with a complex number.
+		for (int i=0; i<newWidth; i++){
+			for (int j=0; j<newHeight; j++){
+				//Check if the REAL value is higher than borderofLife, and lower than borderofDeath (haha Perfect Cherry Blossom reference)
+				if (rCom[i][j].abs() < borderofLife && rCom[i][j].abs() > borderofLife) rCom[i][j] = Complex.ZERO;
+				if (gCom[i][j].abs() < borderofLife && gCom[i][j].abs() > borderofLife) gCom[i][j] = Complex.ZERO;
+				if (bCom[i][j].abs() < borderofLife && bCom[i][j].abs() > borderofLife) bCom[i][j] = Complex.ZERO;
 			}
 		}
 		updateSeparates();
-		*/
+	}
+	
+	//The ur-bandblock filter. Reverse of bandpass. If it's between, it's gone.
+	public void filterBandblock(double borderofLife, double borderofDeath){
+		for (int i=0; i<newWidth; i++){
+			for (int j=0; j<newHeight; j++){
+				//Check if the REAL value is higher than borderofLife, and lower than borderofDeath (haha Perfect Cherry Blossom reference)
+				if (rCom[i][j].abs() > borderofLife && rCom[i][j].abs() < borderofLife) rCom[i][j] = Complex.ZERO;
+				if (gCom[i][j].abs() > borderofLife && gCom[i][j].abs() < borderofLife) gCom[i][j] = Complex.ZERO;
+				if (bCom[i][j].abs() > borderofLife && bCom[i][j].abs() < borderofLife) bCom[i][j] = Complex.ZERO;
+			}
+		}
+		updateSeparates();
 	}
 }
