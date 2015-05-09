@@ -505,7 +505,27 @@ public class FourierTransformation extends ImageReading {
 	}
 	
 	//The edge-detect filter.
-	public void filterEdge(){
-		
+	//This is basically a bandblock filter, only limited to work in the 2nd and 3rd slice of the picture.
+	public void filterEdge(double borderofLife, double borderofDeath){
+		for (int i=0; i<newWidth; i++){
+			for (int j=0; j<newHeight; j++){
+				//2nd slice.
+				if(i > newWidth && j<newHeight){
+					if (calcRange(i,j) > borderofLife && calcRange(i,j) < borderofDeath){
+						rCom[i][j] = Complex.ZERO;
+						gCom[i][j] = Complex.ZERO;
+						bCom[i][j] = Complex.ZERO;
+					}
+				}
+				if (i < newWidth && j> newHeight){
+					if (calcRange(i,j) > borderofLife && calcRange(i,j) < borderofDeath){
+						rCom[i][j] = Complex.ZERO;
+						gCom[i][j] = Complex.ZERO;
+						bCom[i][j] = Complex.ZERO;
+					}
+				}
+			}
+		}
+		updateSeparates();
 	}
 }
