@@ -17,9 +17,9 @@ public class RegionGrowth extends ImageReading {
 		super.initializeAltImage();
 		for(int i=0; i<this.img.getWidth(); i++){
 			for(int j=0; j<this.img.getHeight(); j++){
-				int r = reg.regionMap[i][j];
-				int g = reg.regionMap[i][j];
-				int b = reg.regionMap[i][j];
+				int r = 255*reg.regionMap[i][j];
+				int g = 255*reg.regionMap[i][j];
+				int b = 255*reg.regionMap[i][j];
 				
 				Color col = new Color(r,g,b);
 				super.altimg.setRGB(i, j, col.getRGB());
