@@ -437,6 +437,12 @@ public class FourierTransformation extends ImageReading {
 					//b = super.safetyCheck(b);
 				}
 				
+				if(mode.equals("PHASE")){
+					r = (int) rVizFrq[i][j];
+					g = (int) gVizFrq[i][j];
+					b = (int) bVizFrq[i][j];
+				}
+				
 				Color col = new Color(r,g,b);
 				super.altimg.setRGB(i,j,col.getRGB());
 			}

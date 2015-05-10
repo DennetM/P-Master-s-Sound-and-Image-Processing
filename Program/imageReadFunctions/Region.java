@@ -73,9 +73,6 @@ public class Region {
 		//First step - mark that we've entered a pixel.
 		this.regionMap[i][j] = 1;
 		
-		//Debug:
-		//System.out.println("Pixel ["+i+"],["+j+"] added to region.");
-		
 		double distance; //The distance value between pixels we'll be comparing.
 		
 		//The function checks pixels in the following order: Left, Top, Right, Bottom.
