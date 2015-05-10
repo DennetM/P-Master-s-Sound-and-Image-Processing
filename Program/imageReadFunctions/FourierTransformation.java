@@ -554,13 +554,17 @@ public class FourierTransformation extends ImageReading {
 	//Displacement filter.
 	//The formula given to us should move the picture in some manner, as in, scroll it around. Let's see what happens.
 	public void filterDisplacement(double k, double l){
+		Complex temp;
 		for (int i=0; i<newWidth; i++){
 			for (int j=0; j<newHeight; j++){
 				double firstPart = (-i*k*2*Math.PI)/newWidth;
 				double secondPart = (-j*l*2*Math.PI)/newHeight;
-				rCom[i][j] = rCom[i][j].multiply(firstPart + secondPart + (i+j)*Math.PI);
-				gCom[i][j] = gCom[i][j].multiply(firstPart + secondPart + (i+j)*Math.PI);
-				bCom[i][j] = bCom[i][j].multiply(firstPart + secondPart + (i+j)*Math.PI);
+				temp = Complex.I.multiply(firstPart + secondPart + (k+l)*Math.PI);
+				temp = temp.exp();
+				
+				rCom[i][j] = rCom[i][j].multiply(temp);
+				gCom[i][j] = gCom[i][j].multiply(temp);
+				bCom[i][j] = bCom[i][j].multiply(temp);
 			}
 		}
 	}

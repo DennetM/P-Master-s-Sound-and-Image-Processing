@@ -174,8 +174,8 @@ public class Main {
 
 	fftTrans.FFTstandard();
 	fftTrans.exec_FLIP();
-	fftTrans.filterBandblock(12,120);
-	//fftTrans.filterDisplacement(1, 1);
+	//fftTrans.filterBandblock(12,120);
+	fftTrans.filterDisplacement(100, 1);
 	fftTrans.exec_FLIP();
 	fftTrans.FFTinverse();
 	
