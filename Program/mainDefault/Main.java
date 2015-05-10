@@ -170,7 +170,7 @@ public class Main {
 	//FourierTransformation fftTrans = new FourierTransformation(fileToRead);
 	RegionGrowth regGrow = new RegionGrowth(fileToRead);
 	
-	regGrow.visualize(12, 300, 250);
+	regGrow.visualize(12.5, 300, 250);
 
 	//fftTrans.FFTstandard();
 	//fftTrans.exec_FLIP();
