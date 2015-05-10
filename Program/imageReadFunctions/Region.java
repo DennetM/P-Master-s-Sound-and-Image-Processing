@@ -120,7 +120,7 @@ public class Region {
 				grow(i+1,j);
 			}
 		}
-		/*
+		
 		//Check the bottom pixel (i, j-1)
 		if(i>=0 && ((j-1)>=0) && i<this.mapWidth && (j-1)<this.mapHeight && this.memoryMap[i][j-1] == 0){
 			//It's qualified, mark it.
@@ -133,6 +133,7 @@ public class Region {
 				grow(i,j-1);
 			}
 		}
+		/*
 	*/
 	//There is no specific stopw watchdog. If we run out of places to check, we'll simply stop. MemoryMap makes sure we don't check a place twice.
 		//We don't need to 'wait' for this function since the RegionMap is updated each time we ENTER. When the algorithm stops, we can
