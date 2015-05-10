@@ -1,12 +1,10 @@
 package mainDefault;
 
-import imageReadFunctions.FourierTransformation;
 import imageReadFunctions.ImageDisplay;
 import imageReadFunctions.ImageReading;
+import imageReadFunctions.RegionGrowth;
 
 import javax.swing.JFrame;
-
-import org.apache.commons.math3.transform.TransformType;
 
 import prettyDrawings.HistogramAction;
 
@@ -169,15 +167,17 @@ public class Main {
 	//fileToRead = "CheerSmiles.png"; // Short version for debug purposes.
 	fileToRead = "Lena.png";
 	ImageReading ReadImage = new ImageReading(fileToRead);
-	FourierTransformation fftTrans = new FourierTransformation(fileToRead);
+	//FourierTransformation fftTrans = new FourierTransformation(fileToRead);
+	RegionGrowth regGrow = new RegionGrowth(fileToRead);
 	
+	regGrow.visualize(11, 300, 250);
 
-	fftTrans.FFTstandard();
-	fftTrans.exec_FLIP();
+	//fftTrans.FFTstandard();
+	//fftTrans.exec_FLIP();
 	//fftTrans.filterBandblock(12,120);
-	fftTrans.filterDisplacement(100, 1);
-	fftTrans.exec_FLIP();
-	fftTrans.FFTinverse();
+	//fftTrans.filterDisplacement(100, 1);
+	//fftTrans.exec_FLIP();
+	//fftTrans.FFTinverse();
 	
 	HistogramAction histAction = new HistogramAction();
 	histAction.showTheThing(ReadImage);
@@ -200,9 +200,9 @@ public class Main {
 	//ReadImage.calcPSNR();
 	//ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 	
-	fftTrans.visualize("REAL");
+	//fftTrans.visualize("REAL");
 	//fftTrans.visualize("FOUR");
-	ImageDisplay AlterImage = new ImageDisplay(fftTrans, true);
+	ImageDisplay AlterImage = new ImageDisplay(regGrow, true);
 	
 	
 	
