@@ -3,6 +3,8 @@ package imageReadFunctions;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
+//Region determination class.
+// https://www.youtube.com/watch?v=VaR21S8ewCQ -- This is our bible.
 public class Region {
 
 	//Variables
@@ -70,7 +72,9 @@ public class Region {
 	private void grow(int i, int j){
 		//First step - mark that we've entered a pixel.
 		this.regionMap[i][j] = 1;
-		System.out.println("Pixel ["+i+"],["+j+"] added to region.");
+		
+		//Debug:
+		//System.out.println("Pixel ["+i+"],["+j+"] added to region.");
 		
 		double distance; //The distance value between pixels we'll be comparing.
 		
