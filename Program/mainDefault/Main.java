@@ -51,11 +51,11 @@ public class Main {
 	int frameX = 800;
 	int frameY = 600;
 	
-	
+	/*
 	
 	JOptionPane.showMessageDialog(null, "Podstawowy Program Przetwarzania Obrazu i DŸwiêku. \n\n Autorzy:\n Paula Pszczo³a\n £ukasz Ko³odziejczyk.");
-	fileToRead = JOptionPane.showInputDialog("Wybierz obraz do wczytania.");
-	//fileToRead = "Lena.png";
+	//fileToRead = JOptionPane.showInputDialog("Wybierz obraz do wczytania.");
+	fileToRead = "Lena.png";
 	
 	ImageReading ReadImage = new ImageReading(fileToRead);
 	FourierTransformation Fourier = new FourierTransformation(fileToRead);
@@ -319,9 +319,9 @@ public class Main {
 		}
 	}
 	
+	*/
 	
 	
-	/*
 	//============
 	// Debug:
 	// Load the image and hook it to the image display controller.
@@ -329,17 +329,17 @@ public class Main {
 	//fileToRead = "CheerSmiles.png"; // Short version for debug purposes.
 	fileToRead = "Lena.png";
 	ImageReading ReadImage = new ImageReading(fileToRead);
-	//FourierTransformation fftTrans = new FourierTransformation(fileToRead);
-	RegionGrowth regGrow = new RegionGrowth(fileToRead);
+	FourierTransformation fftTrans = new FourierTransformation(fileToRead);
+	//RegionGrowth regGrow = new RegionGrowth(fileToRead);
 	
-	regGrow.visualize(11.2, 100, 250);
+	//regGrow.visualize(11.2, 100, 250);
 
-	//fftTrans.FFTstandard();
-	//fftTrans.exec_FLIP();
+	fftTrans.FFTstandard();
+	fftTrans.exec_FLIP();
 	//fftTrans.filterBandblock(12,120);
-	//fftTrans.filterDisplacement(100, 1);
-	//fftTrans.exec_FLIP();
-	//fftTrans.FFTinverse();
+	fftTrans.filterDisplacement(256, 256);
+	fftTrans.exec_FLIP();
+	fftTrans.FFTinverse();
 	
 	HistogramAction histAction = new HistogramAction();
 	histAction.showTheThing(ReadImage);
@@ -362,9 +362,9 @@ public class Main {
 	//ReadImage.calcPSNR();
 	//ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 	
-	//fftTrans.visualize("REAL");
+	fftTrans.visualize("REAL");
 	//fftTrans.visualize("FOUR");
-	ImageDisplay AlterImage = new ImageDisplay(regGrow, true);
+	ImageDisplay AlterImage = new ImageDisplay(fftTrans, true);
 	
 	
 	
@@ -389,7 +389,7 @@ public class Main {
 	isoFrame.setLocation(frameX, 0);
 	isoFrame.setContentPane(AlterImage);
 	isoFrame.setVisible(true);
-	*/
+	
 	
 	}
 }
