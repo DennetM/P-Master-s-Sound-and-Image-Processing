@@ -51,7 +51,7 @@ public class Main {
 	int frameX = 800;
 	int frameY = 600;
 	
-	
+	/*
 	
 	JOptionPane.showMessageDialog(null, "Podstawowy Program Przetwarzania Obrazu i DŸwiêku. \n\n Autorzy:\n Paula Pszczo³a\n £ukasz Ko³odziejczyk.");
 	fileToRead = JOptionPane.showInputDialog("Wybierz obraz do wczytania.");
@@ -319,9 +319,9 @@ public class Main {
 		}
 	}
 	
+	*/
 	
 	
-	/*
 	//============
 	// Debug:
 	// Load the image and hook it to the image display controller.
@@ -389,7 +389,7 @@ public class Main {
 	isoFrame.setLocation(frameX, 0);
 	isoFrame.setContentPane(AlterImage);
 	isoFrame.setVisible(true);
-	*/
+	
 	
 	}
 }
