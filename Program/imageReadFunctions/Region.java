@@ -90,8 +90,6 @@ public class Region {
 			//Difference lies here: remove the value you're at and go for the next element of the list.
 			//The program will stop if the list is empty. Ta-dah!
 	private void grow(int i, int j){
-		//Helper for CoordData
-		CoordData helper = new CoordData();
 		//System.out.println("Started growing!");
 		
 		//Declare the loop.
@@ -101,8 +99,8 @@ public class Region {
 			int checkCoordY = todolist.get(0).y; //Helper value for y.
 			
 			//Debug:
-			System.out.println("CoordX:" +checkCoordX);
-			System.out.println("CoordY:" + checkCoordY);
+			//System.out.println("CoordX:" +checkCoordX);
+			//System.out.println("CoordY:" + checkCoordY);
 			
 			//First step - mark that we've entered the pixel.
 			this.regionMap[checkCoordX][checkCoordY] = 1;
@@ -116,6 +114,8 @@ public class Region {
 				this.memoryMap[checkCoordX-1][checkCoordY] = 1;
 				distance = Math.sqrt(Math.pow((r[checkCoordX][checkCoordY]-r[checkCoordX-1][checkCoordY]), 2) + Math.pow((g[checkCoordX][checkCoordY]-g[checkCoordX-1][checkCoordY]), 2) + Math.pow((b[checkCoordX][checkCoordY]-b[checkCoordX-1][checkCoordY]), 2));
 				if(distance<=this.thresh){
+					//Helper for CoordData
+					CoordData helper = new CoordData();
 					//If it qualifies, add it to the list to check.
 					helper.x = checkCoordX-1;
 					helper.y = checkCoordY;
@@ -129,6 +129,8 @@ public class Region {
 				distance = Math.sqrt(Math.pow((r[checkCoordX][checkCoordY]-r[checkCoordX][checkCoordY+1]), 2) + Math.pow((g[checkCoordX][checkCoordY]-g[checkCoordX][checkCoordY+1]), 2) + Math.pow((b[checkCoordX][checkCoordY]-b[checkCoordX][checkCoordY+1]), 2));
 				if(distance<=this.thresh){
 					//If it qualifies, add it to the list to check.
+					//Helper for CoordData
+					CoordData helper = new CoordData();
 					helper.x = checkCoordX;
 					helper.y = checkCoordY+1;
 					todolist.add(helper);
@@ -136,32 +138,32 @@ public class Region {
 			}
 			
 			//Check right (i+1, j)
-			/*
 			if((checkCoordX+1)>=0 && checkCoordY>=0 && (checkCoordX+1)<this.mapWidth && checkCoordY<this.mapHeight && this.memoryMap[checkCoordX+1][checkCoordY] == 0){
 				this.memoryMap[checkCoordX+1][checkCoordY] = 1;
 				distance = Math.sqrt(Math.pow((r[checkCoordX][checkCoordY]-r[checkCoordX+1][checkCoordY]), 2) + Math.pow((g[checkCoordX][checkCoordY]-g[checkCoordX+1][checkCoordY]), 2) + Math.pow((b[checkCoordX][checkCoordY]-b[checkCoordX+1][checkCoordY]), 2));
 				if(distance<=this.thresh){
 					//If it qualifies, add it to the list to check.
+					//Helper for CoordData
+					CoordData helper = new CoordData();
 					helper.x = checkCoordX+1;
 					helper.y = checkCoordY;
 					todolist.add(helper);
 				}
 			}
-			*/
 			
 			//Check bottom (i, j-1)
-			/*
 			if(checkCoordX>=0 && (checkCoordY-1)>=0 && checkCoordX<this.mapWidth && (checkCoordY-1)<this.mapHeight && this.memoryMap[checkCoordX][checkCoordY-1] == 0){
 				this.memoryMap[checkCoordX][checkCoordY-1] = 1;
 				distance = Math.sqrt(Math.pow((r[checkCoordX][checkCoordY]-r[checkCoordX][checkCoordY-1]), 2) + Math.pow((g[checkCoordX][checkCoordY]-g[checkCoordX][checkCoordY-1]), 2) + Math.pow((b[checkCoordX][checkCoordY]-b[checkCoordX][checkCoordY-1]), 2));
 				if(distance<=this.thresh){
 					//If it qualifies, add it to the list to check.
+					//Helper for CoordData
+					CoordData helper = new CoordData();
 					helper.x = checkCoordX;
 					helper.y = checkCoordY-1;
 					todolist.add(helper);
 				}
 			}
-			*/
 			
 			//We've finished checking this element of the array, now check the next one.
 			//Remove the current element, thus shift everything to the left a bit, and go at it again.
@@ -213,7 +215,6 @@ public class Region {
 		}
 		
 		//Check the right pixel (i+1, j)
-		/*
 		if((i+1)>=0 && (j>=0) && (i+1)<this.mapWidth && j<this.mapHeight && this.memoryMap[i+1][j] == 0){
 			//It's qualified, mark it.
 			this.memoryMap[i+1][j] = 1;
@@ -225,10 +226,8 @@ public class Region {
 				growRecursion(i+1,j);
 			}
 		}
-		*/
 		
 		//Check the bottom pixel (i, j-1)
-		/*
 		if(i>=0 && ((j-1)>=0) && i<this.mapWidth && (j-1)<this.mapHeight && this.memoryMap[i][j-1] == 0){
 			//It's qualified, mark it.
 			this.memoryMap[i][j-1] = 1;
@@ -240,7 +239,6 @@ public class Region {
 				growRecursion(i,j-1);
 			}
 		}
-		*/
 	//There is no specific stopw watchdog. If we run out of places to check, we'll simply stop. MemoryMap makes sure we don't check a place twice.
 		//We don't need to 'wait' for this function since the RegionMap is updated each time we ENTER. When the algorithm stops, we can
 		//simply retrieve our regionMap and be done with it.
