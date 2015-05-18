@@ -329,21 +329,17 @@ public class Main {
 	//fileToRead = "CheerSmiles.png"; // Short version for debug purposes.
 	fileToRead = "Lena.png";
 	ImageReading ReadImage = new ImageReading(fileToRead);
-	FourierTransformation fftTrans = new FourierTransformation(fileToRead);
-	//RegionGrowth regGrow = new RegionGrowth(fileToRead);
+	//FourierTransformation fftTrans = new FourierTransformation(fileToRead);
+	RegionGrowth regGrow = new RegionGrowth(fileToRead);
 	
-<<<<<<< HEAD
-	//regGrow.visualize(11.2, 100, 250);
-=======
 	regGrow.visualize(8.5, 100, 250);
->>>>>>> origin/master
 
-	fftTrans.FFTstandard();
-	fftTrans.exec_FLIP();
+	//fftTrans.FFTstandard();
+	//fftTrans.exec_FLIP();
 	//fftTrans.filterBandblock(12,120);
-	fftTrans.filterDisplacement(256, 256);
-	fftTrans.exec_FLIP();
-	fftTrans.FFTinverse();
+	//fftTrans.filterDisplacement(256, 256);
+	//fftTrans.exec_FLIP();
+	//fftTrans.FFTinverse();
 	
 	HistogramAction histAction = new HistogramAction();
 	histAction.showTheThing(ReadImage);
@@ -366,9 +362,9 @@ public class Main {
 	//ReadImage.calcPSNR();
 	//ImageDisplay AlterImage = new ImageDisplay(ReadImage, true);
 	
-	fftTrans.visualize("REAL");
+	//fftTrans.visualize("REAL");
 	//fftTrans.visualize("FOUR");
-	ImageDisplay AlterImage = new ImageDisplay(fftTrans, true);
+	ImageDisplay AlterImage = new ImageDisplay(regGrow, true);
 	
 	
 	
