@@ -66,7 +66,7 @@ public class Region {
 		System.out.println("Beginning region growth with seed values.");
 		
 		//Mark that we've started in the memory.
-		this.memoryMap[seedX][seedY] = 1;
+		this.memoryMap[seedX][seedY] += 1;
 		
 		//Add the first object to our to-do list.
 		CoordData ini = new CoordData();
@@ -110,8 +110,8 @@ public class Region {
 			double distance;
 			
 			//Check left pixel (i-1, j)
-			if((checkCoordX-1)>=0 && checkCoordY>=0 && (checkCoordX-1)<this.mapWidth && checkCoordY<this.mapHeight && this.memoryMap[checkCoordX-1][checkCoordY] == 0){
-				this.memoryMap[checkCoordX-1][checkCoordY] = 1;
+			if((checkCoordX-1)>=0 && checkCoordY>=0 && (checkCoordX-1)<this.mapWidth && checkCoordY<this.mapHeight && this.memoryMap[checkCoordX-1][checkCoordY] <4){
+				this.memoryMap[checkCoordX-1][checkCoordY] += 1;
 				distance = Math.sqrt(Math.pow((r[checkCoordX][checkCoordY]-r[checkCoordX-1][checkCoordY]), 2) + Math.pow((g[checkCoordX][checkCoordY]-g[checkCoordX-1][checkCoordY]), 2) + Math.pow((b[checkCoordX][checkCoordY]-b[checkCoordX-1][checkCoordY]), 2));
 				if(distance<=this.thresh){
 					//Helper for CoordData
@@ -124,8 +124,8 @@ public class Region {
 			}
 			
 			//Check top (i, j+1)
-			if(checkCoordX>=0 && (checkCoordY+1)>=0 && checkCoordX<this.mapWidth && (checkCoordY+1)<this.mapHeight && this.memoryMap[checkCoordX][checkCoordY+1] == 0){
-				this.memoryMap[checkCoordX][checkCoordY+1] = 1;
+			if(checkCoordX>=0 && (checkCoordY+1)>=0 && checkCoordX<this.mapWidth && (checkCoordY+1)<this.mapHeight && this.memoryMap[checkCoordX][checkCoordY+1] <4){
+				this.memoryMap[checkCoordX][checkCoordY+1] += 1;
 				distance = Math.sqrt(Math.pow((r[checkCoordX][checkCoordY]-r[checkCoordX][checkCoordY+1]), 2) + Math.pow((g[checkCoordX][checkCoordY]-g[checkCoordX][checkCoordY+1]), 2) + Math.pow((b[checkCoordX][checkCoordY]-b[checkCoordX][checkCoordY+1]), 2));
 				if(distance<=this.thresh){
 					//If it qualifies, add it to the list to check.
@@ -138,8 +138,8 @@ public class Region {
 			}
 			
 			//Check right (i+1, j)
-			if((checkCoordX+1)>=0 && checkCoordY>=0 && (checkCoordX+1)<this.mapWidth && checkCoordY<this.mapHeight && this.memoryMap[checkCoordX+1][checkCoordY] == 0){
-				this.memoryMap[checkCoordX+1][checkCoordY] = 1;
+			if((checkCoordX+1)>=0 && checkCoordY>=0 && (checkCoordX+1)<this.mapWidth && checkCoordY<this.mapHeight && this.memoryMap[checkCoordX+1][checkCoordY] <4){
+				this.memoryMap[checkCoordX+1][checkCoordY] += 1;
 				distance = Math.sqrt(Math.pow((r[checkCoordX][checkCoordY]-r[checkCoordX+1][checkCoordY]), 2) + Math.pow((g[checkCoordX][checkCoordY]-g[checkCoordX+1][checkCoordY]), 2) + Math.pow((b[checkCoordX][checkCoordY]-b[checkCoordX+1][checkCoordY]), 2));
 				if(distance<=this.thresh){
 					//If it qualifies, add it to the list to check.
@@ -152,8 +152,8 @@ public class Region {
 			}
 			
 			//Check bottom (i, j-1)
-			if(checkCoordX>=0 && (checkCoordY-1)>=0 && checkCoordX<this.mapWidth && (checkCoordY-1)<this.mapHeight && this.memoryMap[checkCoordX][checkCoordY-1] == 0){
-				this.memoryMap[checkCoordX][checkCoordY-1] = 1;
+			if(checkCoordX>=0 && (checkCoordY-1)>=0 && checkCoordX<this.mapWidth && (checkCoordY-1)<this.mapHeight && this.memoryMap[checkCoordX][checkCoordY-1] <4){
+				this.memoryMap[checkCoordX][checkCoordY-1] += 1;
 				distance = Math.sqrt(Math.pow((r[checkCoordX][checkCoordY]-r[checkCoordX][checkCoordY-1]), 2) + Math.pow((g[checkCoordX][checkCoordY]-g[checkCoordX][checkCoordY-1]), 2) + Math.pow((b[checkCoordX][checkCoordY]-b[checkCoordX][checkCoordY-1]), 2));
 				if(distance<=this.thresh){
 					//If it qualifies, add it to the list to check.
